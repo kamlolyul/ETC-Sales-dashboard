@@ -438,7 +438,7 @@ window.APP = window.APP || {};
   function gmColor(v){return v>=0.4?'#16a34a':v>=0.3?'#2563eb':v>=0?'#d97706':'#dc2626';}
 
   // ── 브랜드 당월 차트 ──
-  var brandMonth = [{"n": "라코트", "t": 268, "a": 268, "p": 100}, {"n": "아토스타류", "t": 498, "a": 276, "p": 55}, {"n": "인트론직류", "t": 390, "a": 189, "p": 48}, {"n": "덱실란트", "t": 832, "a": 347, "p": 42}, {"n": "란스톤", "t": 1060, "a": 659, "p": 62}, {"n": "프리스틱", "t": 575, "a": 327, "p": 57}, {"n": "레메론", "t": 444, "a": 174, "p": 39}];
+  var brandMonth = [{"n": "라코르", "t": 268, "a": 268, "p": 100}, {"n": "아토스타류", "t": 498, "a": 276, "p": 55}, {"n": "인트린직류", "t": 390, "a": 189, "p": 48}, {"n": "덱실란트", "t": 832, "a": 347, "p": 42}, {"n": "란스톤", "t": 1060, "a": 659, "p": 62}, {"n": "프리스틱", "t": 575, "a": 327, "p": 57}, {"n": "레메론", "t": 444, "a": 174, "p": 39}];
   (function(){
     var el=document.getElementById('brand-month-chart');
     var maxT=Math.max.apply(null,brandMonth.map(function(d){return d.t;}));
@@ -460,7 +460,7 @@ window.APP = window.APP || {};
   })();
 
   // ── 브랜드 YTD 차트 ──
-  var brandYtd = [{"n": "라코트", "t": 828, "a": 1217, "p": 147}, {"n": "아토스타류", "t": 1467, "a": 1256, "p": 86}, {"n": "인트론직류", "t": 1174, "a": 848, "p": 72}, {"n": "덱실란트", "t": 2239, "a": 1642, "p": 73}, {"n": "란스톤", "t": 2854, "a": 2584, "p": 91}, {"n": "프리스틱", "t": 1471, "a": 1352, "p": 92}, {"n": "레메론", "t": 1134, "a": 955, "p": 84}];
+  var brandYtd = [{"n": "라코르", "t": 828, "a": 1217, "p": 147}, {"n": "아토스타류", "t": 1467, "a": 1256, "p": 86}, {"n": "인트린직류", "t": 1174, "a": 848, "p": 72}, {"n": "덱실란트", "t": 2239, "a": 1642, "p": 73}, {"n": "란스톤", "t": 2854, "a": 2584, "p": 91}, {"n": "프리스틱", "t": 1471, "a": 1352, "p": 92}, {"n": "레메론", "t": 1134, "a": 955, "p": 84}];
   (function(){
     var el=document.getElementById('brand-ytd-chart');
     var maxT=Math.max.apply(null,brandYtd.map(function(d){return Math.max(d.t,d.a);}));
@@ -848,7 +848,7 @@ function drawChart(rows){
   var totalW = n * (barW + 8) + 80;
   var svgW = Math.max(W, totalW);
 
-  var ML = 52, MR = 16, MT = 20, MB = 60;
+  var ML = 52, MR = 16, MT = 20, MB = 90;
   var plotW = svgW - ML - MR;
   var groupW = plotW / n;
 
@@ -941,11 +941,11 @@ function drawChart(rows){
     // GP 막대
     svg += `<rect ${click} ${tip} x="${cx + 1}" y="${yGP}" width="${bw/2}" height="${gpH}" fill="${cGP}" rx="3"/>`;
 
-    // X축 라벨
-    var nm = d.name.length > 8 ? d.name.slice(0,8)+'…' : d.name;
-    var labelY = MT + topH + breakH + botH + 14;
-    svg += `<text x="${cx}" y="${labelY}" text-anchor="middle" font-size="10" fill="#374151"
-      transform="rotate(-30,${cx},${labelY})">${nm}</text>`;
+    // X축 라벨 (수직 회전으로 겹침 방지)
+    var nm = d.name.length > 6 ? d.name.slice(0,6)+'…' : d.name;
+    var labelY = MT + topH + breakH + botH + 16;
+    svg += `<text x="${cx}" y="${labelY}" text-anchor="end" font-size="10" fill="#374151"
+      transform="rotate(-45,${cx},${labelY})">${nm}</text>`;
 
     // 최대/최소 표시
     if(d.ns === maxNS) svg += `<text x="${cx}" y="${yNS-6}" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="700">▲최대</text>`;
