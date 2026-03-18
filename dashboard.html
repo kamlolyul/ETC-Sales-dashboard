@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ETC부문 매출 일계표</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans KR',sans-serif;background:#f1f5f9;min-height:100vh;color:#111827}
+/* ── 레이아웃 ── */
+#wrap, #ganap-wrap{display:flex;min-height:100vh}
+#sidebar{width:200px;min-width:200px;background:#fff;border-right:1px solid #e5e7eb;padding:20px 16px;display:flex;flex-direction:column;gap:16px;box-shadow:2px 0 8px rgba(0,0,0,.04)}
+#main{flex:1;padding:22px 26px;overflow:auto}
+/* ── 사이드바 ── */
+.sb-head{font-size:14px;font-weight:800;color:#1e293b;padding-bottom:14px;border-bottom:1px solid #f1f5f9}
+.sb-head-sub{font-size:11px;color:#94a3b8;margin-top:2px;font-weight:400}
+.sb-label{font-size:10px;font-weight:700;color:#374151;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.sb-badge{color:#fff;border-radius:5px;padding:1px 7px;font-size:11px;font-weight:800}
+select{width:100%;padding:6px 8px;border:1.5px solid #d1d5db;border-radius:8px;font-size:12px;font-family:'Noto Sans KR',sans-serif;outline:none;background:#fff;color:#111827}
+select:disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed}
+/* ── KPI ── */
+.kpi-box{margin-top:auto;border-radius:12px;padding:12px;text-align:center;border:1.5px solid}
+.kpi-lbl{font-size:11px;color:#6b7280;margin-bottom:4px}
+.kpi-val{font-size:28px;font-weight:900;line-height:1;letter-spacing:-1px}
+.kpi-badge{display:inline-block;margin-top:8px;padding:2px 12px;border-radius:20px;font-size:11px;font-weight:700}
+.kpi-sub{font-size:10px;color:#9ca3af;margin-top:5px}
+/* ── 헤더 ── */
+.page-title{font-size:20px;font-weight:800;color:#1e293b;letter-spacing:-.5px}
+.page-sub{font-size:11px;color:#94a3b8;margin-top:3px}
+.title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+/* ── 빵부스러기 ── */
+.breadcrumb{font-size:12px;color:#64748b;margin-top:4px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.bc-item{color:#2563eb;font-weight:600;cursor:pointer}
+.bc-item:hover{text-decoration:underline}
+.bc-sep{color:#cbd5e1}
+/* ── 뒤로가기 버튼 ── */
+.back-btn{background:#2563eb;border:none;border-radius:9px;padding:9px 18px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(37,99,235,.3);display:flex;align-items:center;gap:6px}
+.back-btn:hover{background:#1d4ed8}
+/* ── KPI 카드 3개 ── */
+.kpi-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.kpi-card{border-radius:12px;padding:16px 20px;border:1.5px solid}
+.kpi-card-lbl{font-size:13px;font-weight:700;margin-bottom:8px}
+.kpi-card-val{font-size:28px;font-weight:900;letter-spacing:-.5px;margin-bottom:2px}
+.kpi-card-sub{font-size:11px;color:#6b7280}
+/* ── 요약 카드 ── */
+.sum-cards{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.sum-card{flex:1 1 140px;padding:12px 16px;border-radius:10px;border:1.5px solid}
+.sum-card .sn{font-size:10px;font-weight:700;margin-bottom:3px}
+.sum-card .sv{font-size:14px;font-weight:800}
+.sum-card .ss{font-size:10px;color:#6b7280;margin-top:2px}
+/* ── 차트 박스 ── */
+.cbox{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.ctitle{font-size:13px;font-weight:700;color:#374151;margin-bottom:14px}
+/* ── 막대 차트 ── */
+.bar-row{display:flex;align-items:center;margin-bottom:7px;cursor:pointer;border-radius:6px;padding:3px 4px;transition:background .1s}
+.bar-row:hover{background:#f8fafc}
+.bar-name{width:150px;min-width:150px;font-size:11px;color:#374151;text-align:right;padding-right:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;display:flex;flex-direction:column;gap:3px}
+.bar-wrap{display:flex;align-items:center;gap:6px}
+.bar{height:13px;border-radius:2px;min-width:2px;transition:width .3s}
+.bar-val{font-size:10px;color:#1e293b;font-weight:600;white-space:nowrap;min-width:70px}
+.bar-gm{font-size:10px;color:#64748b;white-space:nowrap}
+.val-col{width:90px;min-width:90px;display:flex;flex-direction:column;gap:3px;padding-left:8px}
+.val-col span{font-size:10px;font-weight:600;color:#1e293b;white-space:nowrap}
+/* ── 범례 ── */
+.legend{display:flex;gap:14px;margin-top:12px;font-size:11px;color:#6b7280;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:4px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
+/* ── 툴팁 ── */
+.tooltip{position:fixed;background:#1e293b;color:#fff;border-radius:10px;padding:10px 14px;font-size:12px;pointer-events:none;display:none;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.25);min-width:210px;line-height:1.9}
+.tt-name{font-weight:700;color:#e2e8f0;margin-bottom:4px;font-size:12px;border-bottom:1px solid #334155;padding-bottom:4px}
+.tt-ns{color:#60a5fa}
+.tt-gp{color:#a78bfa}
+.tt-gm{color:#34d399}
+
+body{font-family:'Noto Sans KR',sans-serif;background:#f1f5f9;color:#111827;min-height:100vh;margin:0;padding:0}
+.ilg-hd{background:linear-gradient(135deg,#0f2952,#1e40af);color:#fff;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+.ilg-hd-t{font-size:17px;font-weight:800;letter-spacing:-.5px}
+.ilg-hd-s{font-size:11px;color:#93c5fd;margin-top:2px}
+.ilg-bge{background:rgba(255,255,255,.18);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600}
+.ilg-ct{padding:20px 26px;max-width:1400px;margin:0 auto}
+.pw{background:#fff;border-radius:12px;padding:16px 22px;margin-bottom:20px;border:1px solid #e5e7eb;display:flex;align-items:center;gap:20px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.pi{flex:1}.pl{font-size:12px;color:#64748b;margin-bottom:6px;font-weight:600}
+.pbar{height:14px;background:#e5e7eb;border-radius:20px;overflow:hidden}
+.pf{height:100%;background:linear-gradient(90deg,#2563eb,#0ea5e9);border-radius:20px}
+.ps{display:flex;gap:24px}.psi{text-align:center}
+.psn{font-size:22px;font-weight:900;color:#1d4ed8}.psl{font-size:10px;color:#94a3b8;margin-top:1px}
+.st{font-size:12px;font-weight:700;color:#64748b;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.st::after{content:'';flex:1;height:1px;background:#e5e7eb}
+.pg4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:10px}
+.pkc{border-radius:12px;padding:15px 18px;border:1.5px solid}
+.pkc-l{font-size:11px;font-weight:700;margin-bottom:5px}
+.pkc-v{font-size:17px;font-weight:900;letter-spacing:-.5px;line-height:1.2;word-break:break-all}
+.pkc-s{font-size:10px;color:#6b7280;margin-top:4px}
+.pkc-t{display:inline-block;font-size:9px;padding:2px 7px;border-radius:8px;font-weight:700;margin-top:5px}
+.gkpc{border-radius:12px;padding:15px 22px;background:#fff7ed;border:2px solid #fb923c;cursor:pointer;transition:all .15s;display:inline-block;margin-bottom:12px;user-select:none}
+.gkpc:hover{background:#ffedd5;box-shadow:0 6px 20px rgba(234,88,12,.25);transform:translateY(-2px)}
+.gnote{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:11px;color:#92400e;line-height:1.8;margin-bottom:22px}
+.cr{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.cb{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.cbf{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:16px}
+.cbt{font-size:12px;font-weight:700;color:#fff;padding:8px 14px;border-radius:8px;margin-bottom:14px;display:inline-block}
+.bcw{display:flex;flex-direction:column;gap:10px}
+.bcr{display:grid;grid-template-columns:72px 1fr 52px;align-items:center;gap:8px}
+.bcl{font-size:11px;color:#374151;font-weight:600;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bcs{display:flex;flex-direction:column;gap:3px}
+.bcbw{display:flex;align-items:center;gap:6px}
+.bcb{height:11px;border-radius:3px;min-width:3px}
+.bcv{font-size:10px;font-weight:700;white-space:nowrap}
+.bcrt{text-align:right}
+.pb2{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px}
+.lgr{display:flex;gap:14px;margin-top:10px;font-size:10px;color:#6b7280;flex-wrap:wrap}
+.lgr span{display:inline-flex;align-items:center;gap:4px}
+.lgr i{display:inline-block;width:10px;height:10px;border-radius:2px}
+.bnb{background:#1d4ed8;border:none;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+.bnb:hover{background:#1e40af}
+</style>
+</head>
+<body>
+
+<div id="S-ilgye">
+<div class="ilg-hd">
+  <div><div class="ilg-hd-t">ETC부문 매출 일계표</div><div class="ilg-hd-s">2026-03-18 일자 (전체) · 영업일수: 12 / 21일</div></div>
+  <div class="ilg-bge">📅 2026.03.18 기준</div>
+</div>
+<div class="ilg-ct">
+  <div class="pw" style="margin-top:16px">
+    <div class="pi"><div class="pl">3월 영업일 진행률</div><div class="pbar"><div class="pf" style="width:52%"></div></div></div>
+    <div class="ps">
+      <div class="psi"><div class="psn">52%</div><div class="psl">진행률</div></div>
+      <div class="psi"><div class="psn" style="color:#0891b2">12일</div><div class="psl">경과일</div></div>
+      <div class="psi"><div class="psn" style="color:#7c3aed">9일</div><div class="psl">잔여일</div></div>
+      <div class="psi"><div class="psn" style="color:#dc2626">21일</div><div class="psl">목표일</div></div>
+    </div>
+  </div>
+  <div class="st">📊 전월 매출 현황 (26.02)</div>
+  <div class="pg4">
+    <div class="pkc" style="background:#eff6ff;border-color:#bfdbfe"><div class="pkc-l" style="color:#2563eb">📋 ERP</div><div class="pkc-v" style="color:#1d4ed8">7,420,211,033원</div><div class="pkc-s">ERP 확정 매출</div><div class="pkc-t" style="background:#dbeafe;color:#1d4ed8">✓ 확정</div></div>
+    <div class="pkc" style="background:#f8fafc;border-color:#e2e8f0"><div class="pkc-l" style="color:#64748b">📡 EDI</div><div class="pkc-v" style="color:#94a3b8;font-size:15px;padding-top:4px">취합 중</div><div class="pkc-s">EDI 청구 데이터</div><div class="pkc-t" style="background:#f1f5f9;color:#64748b">⏳ 집계 중</div></div>
+    <div class="pkc" style="background:#f8fafc;border-color:#e2e8f0"><div class="pkc-l" style="color:#64748b">🏭 도매유통자료</div><div class="pkc-v" style="color:#94a3b8;font-size:15px;padding-top:4px">취합 중</div><div class="pkc-s">도매 유통 데이터</div><div class="pkc-t" style="background:#f1f5f9;color:#64748b">⏳ 집계 중</div></div>
+    <div class="pkc" style="background:#f5f3ff;border-color:#ddd6fe"><div class="pkc-l" style="color:#7c3aed">📈 UBIST</div><div class="pkc-v" style="color:#6d28d9">6,099,984,668원</div><div class="pkc-s">UBIST 처방 데이터</div><div class="pkc-t" style="background:#ede9fe;color:#6d28d9">✓ 확정</div></div>
+  </div>
+  <div class="gkpc" id="go-ganap">
+    <div style="font-size:11px;font-weight:700;color:#ea580c;margin-bottom:6px">🏥 간납 매출 <span style="font-size:10px;font-weight:500;color:#9ca3af">(클릭 → 상세 보기)</span></div>
+    <div style="font-size:22px;font-weight:900;color:#c2410c;letter-spacing:-.5px">1,118,743,438원</div>
+    <div style="font-size:10px;color:#9a3412;margin-top:4px">간납도매 계약 품목 매출 (26.02)</div>
+    <div style="font-size:10px;background:#ffedd5;color:#c2410c;border-radius:8px;padding:3px 9px;display:inline-block;margin-top:6px;font-weight:700">간납(병원)별 매출 현황 바로가기 ↗</div>
+  </div>
+  <div class="gnote"><b>💡 전월 매출 안내</b><br>· <b>ERP</b>: 사내 ERP 확정 매출 · <b>EDI/도매유통</b>: 취합 중 · <b>UBIST</b>: 처방 데이터 기준 · <b>간납</b>: 간납도매 계약 품목</div>
+  <div class="st">📌 사업부별 실적 (단위: 백만)</div>
+  <div class="cr">
+    <div class="cb"><div class="cbt" style="background:#1e3a5f">당월 목표 vs 실적</div><div class="bcw">
+      <div class="bcr"><div class="bcl">ETC 자사</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:56%;background:#3b82f6"></div><span class="bcv" style="color:#1d4ed8">2,806</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">4,980</span></div></div><div class="bcrt"><span class="pb2" style="background:#dbeafe;color:#1d4ed8">56%</span></div></div>
+      <div class="bcr"><div class="bcl">ETC 제휴</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:52%;background:#8b5cf6"></div><span class="bcv" style="color:#6d28d9">1,506</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">2,911</span></div></div><div class="bcrt"><span class="pb2" style="background:#ede9fe;color:#6d28d9">52%</span></div></div>
+      <div class="bcr"><div class="bcl" style="font-weight:800">ETC 계</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:55%;background:#0ea5e9"></div><span class="bcv" style="color:#0284c7;font-weight:800">4,312</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">7,891</span></div></div><div class="bcrt"><span class="pb2" style="background:#e0f2fe;color:#0284c7;font-weight:800">55%</span></div></div>
+    </div><div class="lgr"><span><i style="background:#3b82f6"></i>실적</span><span><i style="background:#e2e8f0"></i>목표</span></div></div>
+    <div class="cb"><div class="cbt" style="background:#1e40af">YTD 3월 달성률</div><div class="bcw">
+      <div class="bcr"><div class="bcl">ETC 자사</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:90%;background:#16a34a"></div><span class="bcv" style="color:#15803d">13,109</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">14,560</span></div></div><div class="bcrt"><span class="pb2" style="background:#dcfce7;color:#15803d">90%</span></div></div>
+      <div class="bcr"><div class="bcl">ETC 제휴</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:85%;background:#16a34a"></div><span class="bcv" style="color:#15803d">6,532</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">7,698</span></div></div><div class="bcrt"><span class="pb2" style="background:#dcfce7;color:#15803d">85%</span></div></div>
+      <div class="bcr"><div class="bcl" style="font-weight:800">ETC 계</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:88%;background:#0ea5e9"></div><span class="bcv" style="color:#0284c7;font-weight:800">19,641</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">22,258</span></div></div><div class="bcrt"><span class="pb2" style="background:#e0f2fe;color:#0284c7;font-weight:800">88%</span></div></div>
+    </div><div class="lgr"><span><i style="background:#16a34a"></i>YTD</span><span><i style="background:#e2e8f0"></i>목표</span></div></div>
+  </div>
+  <div class="st">🤝 제휴선별 실적 (단위: 백만)</div>
+  <div class="cr">
+    <div class="cb"><div class="cbt" style="background:#065f46">당월 달성률</div><div class="bcw">
+      <div class="bcr"><div class="bcl">PFIZER</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:57%;background:#3b82f6"></div><span class="bcv" style="color:#1d4ed8">327</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">575</span></div></div><div class="bcrt"><span class="pb2" style="background:#dbeafe;color:#1d4ed8">57%</span></div></div>
+      <div class="bcr"><div class="bcl">ORGANON</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:39%;background:#f97316"></div><span class="bcv" style="color:#c2410c">174</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">444</span></div></div><div class="bcrt"><span class="pb2" style="background:#ffedd5;color:#c2410c">39%</span></div></div>
+      <div class="bcr"><div class="bcl">TAKEDA</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:53%;background:#8b5cf6"></div><span class="bcv" style="color:#6d28d9">1,006</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">1,892</span></div></div><div class="bcrt"><span class="pb2" style="background:#ede9fe;color:#6d28d9">53%</span></div></div>
+    </div><div class="lgr"><span><i style="background:#3b82f6"></i>실적</span><span><i style="background:#e2e8f0"></i>목표</span></div></div>
+    <div class="cb"><div class="cbt" style="background:#14532d">YTD 달성률</div><div class="bcw">
+      <div class="bcr"><div class="bcl">PFIZER</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:92%;background:#16a34a"></div><span class="bcv" style="color:#15803d">1,352</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">1,471</span></div></div><div class="bcrt"><span class="pb2" style="background:#dcfce7;color:#15803d">92%</span></div></div>
+      <div class="bcr"><div class="bcl">ORGANON</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:84%;background:#16a34a"></div><span class="bcv" style="color:#15803d">955</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">1,134</span></div></div><div class="bcrt"><span class="pb2" style="background:#dcfce7;color:#15803d">84%</span></div></div>
+      <div class="bcr"><div class="bcl">TAKEDA</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:83%;background:#16a34a"></div><span class="bcv" style="color:#15803d">4,226</span></div><div class="bcbw"><div class="bcb" style="width:100%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">5,093</span></div></div><div class="bcrt"><span class="pb2" style="background:#dcfce7;color:#15803d">83%</span></div></div>
+    </div><div class="lgr"><span><i style="background:#16a34a"></i>YTD</span><span><i style="background:#e2e8f0"></i>목표</span></div></div>
+  </div>
+  <div class="st">💊 브랜드별 실적 (단위: 백만)</div>
+  <div class="cr">
+    <div class="cb"><div class="cbt" style="background:#4c1d95">당월 달성률</div><div class="bcw" id="ilg-bm"></div><div class="lgr"><span><i style="background:#3b82f6"></i>실적</span><span><i style="background:#e2e8f0"></i>목표</span></div></div>
+    <div class="cb"><div class="cbt" style="background:#3b0764">YTD 달성률</div><div class="bcw" id="ilg-by"></div><div class="lgr"><span><i style="background:#16a34a"></i>YTD</span><span><i style="background:#e2e8f0"></i>목표</span></div></div>
+  </div>
+  <div class="st">📈 최근 3일 일별 추이 (단위: 백만)</div>
+  <div class="cbf"><div id="ilg-trend"></div></div>
+</div>
+</div>
+
+<div id="S-ganap" style="display:none">
+  <div style="background:#1e3a5f;padding:12px 22px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)">
+    <div style="color:#fff;font-size:15px;font-weight:800">간납(병원)별 매출 현황</div>
+    <button class="bnb" id="go-back">← 일계표로 돌아가기</button>
+  </div>
+  <div id="ganap-wrap">
+<!-- 사이드바 -->
+<div id="sidebar">
+  <div class="sb-head">
+    매출 현황
+    <div class="sb-head-sub">2026년 02월 기준</div>
+  </div>
+  <div>
+    <div class="sb-label"><span class="sb-badge" style="background:#2563eb">①</span>영업부</div>
+    <select id="deptSel" onchange="onDept()"></select>
+  </div>
+  <div>
+    <div class="sb-label"><span class="sb-badge" style="background:#7c3aed">②</span>영업팀</div>
+    <select id="teamSel" onchange="onTeam()"></select>
+  </div>
+  <div>
+    <div class="sb-label"><span class="sb-badge" style="background:#0891b2">③</span>처방코스</div>
+    <select id="courseSel" onchange="onCourse()"></select>
+  </div>
+  <div class="kpi-box" id="kpiBox" style="border-color:#bae6fd;background:#f0f9ff">
+    <div class="kpi-lbl" id="kpiLbl">전체 Gross Margin</div>
+    <div class="kpi-val" id="kpiVal" style="color:#0891b2">—</div>
+    <div class="kpi-badge" id="kpiBadge" style="color:#0891b2;background:#cffafe">▲ 흑자</div>
+    <div class="kpi-sub" id="kpiSub"></div>
+  </div>
+</div>
+
+<!-- 메인 -->
+<div id="main">
+  <div class="title-row">
+    <div>
+      <div class="page-title">간납(병원)별 매출 현황</div>
+      <div class="page-sub">(26.02 기준 간납도매와 계약된 품목 매출과 원가 제외한 매출 비교 자료)</div>
+      <div class="breadcrumb" id="bc"></div>
+    </div>
+    <button class="back-btn" id="backBtn" style="display:none" onclick="goBack()">← 전체 보기</button>
+  </div>
+
+  <!-- 전체 KPI 3개 카드 -->
+  <div class="kpi-cards" id="kpiCards"></div>
+
+  <!-- 요약 카드 -->
+  <div class="sum-cards" id="sumCards"></div>
+
+  <!-- 차트 -->
+  <div class="cbox">
+    <div class="ctitle" id="ctitle"></div>
+    <div id="chart"></div>
+    <div class="legend">
+      <span><i style="background:#3b82f6"></i>Net-Sales</span>
+      <span><i style="background:#8b5cf6"></i>Gross Profit</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 툴팁 -->
+<div class="tooltip" id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-ns" id="tt-ns"></div>
+  <div class="tt-gp" id="tt-gp"></div>
+  <div class="tt-gm" id="tt-gm"></div>
+</div>
+
+
+</div>
+
+<script type="text/javascript">
+// 모든 코드를 단일 네임스페이스 객체로 관리하여 충돌 완전 방지
+window.APP = window.APP || {};
+
+(function(APP) {
+
+  // ── 페이지 전환 ──
+  APP.showGanap = function() {
+    document.getElementById('S-ilgye').style.display = 'none';
+    document.getElementById('S-ganap').style.display = 'block';
+    window.scrollTo(0, 0);
+    if (!APP._gi) {
+      APP._gi = true;
+      APP.buildDept(); APP.buildTeam(); APP.buildCourse(); APP.render();
+    }
+  };
+  APP.showIlgye = function() {
+    document.getElementById('S-ganap').style.display = 'none';
+    document.getElementById('S-ilgye').style.display = 'block';
+    window.scrollTo(0, 0);
+  };
+
+  document.getElementById('go-ganap').addEventListener('click', APP.showGanap);
+  document.getElementById('go-back').addEventListener('click', APP.showIlgye);
+
+  // ── 일계표 브랜드 차트 ──
+  var I_BM=[{n:'라코트',a:268,t:268,p:100},{n:'아토스타류',a:276,t:498,p:55},{n:'인트론직류',a:189,t:390,p:48},{n:'멕실란트',a:347,t:832,p:42},{n:'란스톤',a:659,t:1060,p:62},{n:'프리스틱',a:327,t:575,p:57},{n:'레메론',a:174,t:444,p:39}];
+  var I_BY=[{n:'라코트',a:1217,t:828,p:147},{n:'아토스타류',a:1256,t:1467,p:86},{n:'인트론직류',a:848,t:1174,p:72},{n:'멕실란트',a:1642,t:2239,p:73},{n:'란스톤',a:2584,t:2854,p:91},{n:'프리스틱',a:1352,t:1471,p:92},{n:'레메론',a:955,t:1134,p:84}];
+  function I_cP(p){return p>=100?'#16a34a':p>=80?'#2563eb':p>=60?'#d97706':'#dc2626'}
+  function I_bP(p){return p>=100?'#dcfce7':p>=80?'#dbeafe':p>=60?'#fef9c3':'#fee2e2'}
+  function I_rB(data,id,maxV){document.getElementById(id).innerHTML=data.map(function(d){var aw=Math.round(Math.min(d.a/maxV,1)*100),tw=Math.round(Math.min(d.t/maxV,1)*100),c=I_cP(d.p);return '<div class="bcr"><div class="bcl">'+d.n+'</div><div class="bcs"><div class="bcbw"><div class="bcb" style="width:'+aw+'%;background:'+c+'"></div><span class="bcv" style="color:'+c+'">'+d.a.toLocaleString('ko-KR')+'</span></div><div class="bcbw"><div class="bcb" style="width:'+tw+'%;background:#e2e8f0"></div><span class="bcv" style="color:#94a3b8">'+d.t.toLocaleString('ko-KR')+'</span></div></div><div class="bcrt"><span class="pb2" style="background:'+I_bP(d.p)+';color:'+c+'">'+d.p+'%</span></div></div>';}).join('');}
+  I_rB(I_BM,'ilg-bm',1060); I_rB(I_BY,'ilg-by',2854);
+
+  // ── 일별 추이 ──
+  (function(){var el=document.getElementById('ilg-trend');var W=el.offsetWidth||700,H=180,ML=50,MR=20,MT=20,MB=40;var pW=W-ML-MR,pH=H-MT-MB,maxV=280,gX=pW/2;var days=['3/16','3/17','3/18'];var S=[{n:'ETC 자사',v:[164,126,62],c:'#3b82f6'},{n:'ETC 제휴',v:[67,78,76],c:'#8b5cf6'},{n:'ETC 계',v:[231,204,139],c:'#0ea5e9'}];var svg='<svg width="'+W+'" height="'+H+'" style="overflow:visible">';[0,70,140,210,280].forEach(function(v){var y=MT+pH-(v/maxV)*pH;svg+='<line x1="'+ML+'" y1="'+y+'" x2="'+(ML+pW)+'" y2="'+y+'" stroke="#f3f4f6" stroke-width="1"/><text x="'+(ML-6)+'" y="'+(y+4)+'" text-anchor="end" font-size="10" fill="#9ca3af">'+v+'</text>';});days.forEach(function(d,i){svg+='<text x="'+(ML+i*gX)+'" y="'+(MT+pH+18)+'" text-anchor="middle" font-size="11" fill="#374151" font-weight="600">'+d+'</text>';});S.forEach(function(s){var pts=s.v.map(function(v,i){return{x:ML+i*gX,y:MT+pH-(v/maxV)*pH}});svg+='<path d="M '+pts[0].x+' '+(MT+pH)+' L '+pts[0].x+' '+pts[0].y+' L '+pts[1].x+' '+pts[1].y+' L '+pts[2].x+' '+pts[2].y+' L '+pts[2].x+' '+(MT+pH)+' Z" fill="'+s.c+'" opacity="0.08"/>';svg+='<path d="M '+pts[0].x+' '+pts[0].y+' L '+pts[1].x+' '+pts[1].y+' L '+pts[2].x+' '+pts[2].y+'" fill="none" stroke="'+s.c+'" stroke-width="2.5"/>';pts.forEach(function(p,j){svg+='<circle cx="'+p.x+'" cy="'+p.y+'" r="5" fill="'+s.c+'" stroke="#fff" stroke-width="2"/><text x="'+p.x+'" y="'+(p.y-10)+'" text-anchor="middle" font-size="10" fill="'+s.c+'" font-weight="700">'+s.v[j]+'</text>';});});var lx=ML;S.forEach(function(s){svg+='<rect x="'+lx+'" y="'+(H-14)+'" width="10" height="10" fill="'+s.c+'" rx="2"/><text x="'+(lx+13)+'" y="'+(H-5)+'" font-size="10" fill="#6b7280">'+s.n+'</text>';lx+=80;});svg+='</svg>';el.innerHTML=svg;})();
+
+  // ── 간납 대시보드 (G_ prefix로 완전 격리) ──
+
+var G_RAW = [{"dept": "종병영업부", "team": "종병 영업2팀", "course": "황재혁", "hosp": "가톨릭대학교서울성모병원", "ns": 49257498, "gp": 16957209, "gm": 0.344256}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "현동준", "hosp": "대구 카톨릭대학교 병원", "ns": 35297906, "gp": 6585298, "gm": 0.186563}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "현동준", "hosp": "안동의료재단 안동병원", "ns": 29756763, "gp": 10643656, "gm": 0.357689}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "이정현", "hosp": "국립서울병원", "ns": 26317680, "gp": 3035659, "gm": 0.115347}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "(주)주천약품(대행)", "ns": 25780380, "gp": 13573937, "gm": 0.526522}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "김선명", "hosp": "시화병원", "ns": 23676260, "gp": 5294605, "gm": 0.223625}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "이세호", "hosp": "창원한마음병원", "ns": 20352245, "gp": 8893356, "gm": 0.436972}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "공태형", "hosp": "부천세종병원", "ns": 17744106, "gp": 6272118, "gm": 0.353476}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "(주)메디젠(대행)", "ns": 17513772, "gp": 9185768, "gm": 0.524488}, {"dept": "병의원영업2부", "team": "인천 의원팀", "course": "박준혁", "hosp": "현대유비스병원", "ns": 17120869, "gp": 5567625, "gm": 0.325195}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "강정호", "hosp": "청아병원", "ns": 16428910, "gp": 8674458, "gm": 0.528}, {"dept": "병의원영업2부", "team": "병의원영업B", "course": "허창성", "hosp": "(의)인화재단한국병원", "ns": 15513083, "gp": 9780128, "gm": 0.630444}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "홍성훈", "hosp": "다니엘종합병원", "ns": 14159385, "gp": 5932251, "gm": 0.418962}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "이정현", "hosp": "한국보훈복지의료공단 중앙보훈병원", "ns": 13877419, "gp": -914921, "gm": -0.065929}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "이재원", "hosp": "의료법인성애병원", "ns": 13816002, "gp": 7801160, "gm": 0.564647}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유해서", "hosp": "김동진정신건강의학과의원", "ns": 13802570, "gp": 5872622, "gm": 0.425473}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이충연", "hosp": "(의)고담의료재단마더스병원", "ns": 13431490, "gp": 1220442, "gm": 0.090864}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "최지영", "hosp": "연세대학교의과대학세브란스병원", "ns": 12520464, "gp": 2497328, "gm": 0.19946}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "정세윤", "hosp": "남원성일병원", "ns": 12377133, "gp": 5545561, "gm": 0.448049}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "강동준", "hosp": "상주성모병원", "ns": 12140090, "gp": 5068067, "gm": 0.417465}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "강정호", "hosp": "우리병원", "ns": 12131930, "gp": 7678508, "gm": 0.632917}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유현덕", "hosp": "의)정안의료재단중앙병원", "ns": 12022118, "gp": 4180348, "gm": 0.347721}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "정준천", "hosp": "대자인병원", "ns": 11630860, "gp": 3463910, "gm": 0.297821}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "정준천", "hosp": "동군산병원", "ns": 11212086, "gp": 4243757, "gm": 0.378498}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "강연모", "hosp": "천안충무병원", "ns": 11111250, "gp": 6706475, "gm": 0.603575}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이훈구", "hosp": "예수병원", "ns": 11099430, "gp": 623430, "gm": 0.056168}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "박제환", "hosp": "경희의료원", "ns": 10995420, "gp": 3192899, "gm": 0.290384}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "함승재", "hosp": "백제종합병원", "ns": 9654360, "gp": 4900164, "gm": 0.50756}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "이세호", "hosp": "동양의료재단연세사랑병원", "ns": 9518362, "gp": 2976859, "gm": 0.312749}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "엘에스메디팜(대행)", "ns": 9317380, "gp": -611856, "gm": -0.065668}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김창섭", "hosp": "의료법인한성재단포항세명기독병원", "ns": 9302690, "gp": 1623186, "gm": 0.174486}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김경주", "hosp": "참조은병원", "ns": 9278280, "gp": 3522797, "gm": 0.379682}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "김진성", "hosp": "의료법인 태성의료재단 제일조은병원", "ns": 9078720, "gp": 6349964, "gm": 0.699434}, {"dept": "병의원영업2부", "team": "병의원영업B", "course": "허창성", "hosp": "뿌리병원", "ns": 8528647, "gp": 3722299, "gm": 0.436447}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "곽경호", "hosp": "의료법인 조윤의료재단 영동병원", "ns": 8456480, "gp": 3634680, "gm": 0.42981}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "안재영", "hosp": "의료법인모덕의료재단 동민정신건강의학과의원", "ns": 7924195, "gp": 4056165, "gm": 0.511871}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "(주)성심메디칼(대행)", "ns": 7816600, "gp": 1980400, "gm": 0.253358}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "정상훈", "hosp": "조은금강병원", "ns": 7778120, "gp": 6256322, "gm": 0.804349}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "예승수", "hosp": "봉생병원", "ns": 7680820, "gp": 4351896, "gm": 0.566593}, {"dept": "병의원영업2부", "team": "서부 의원팀", "course": "이종호", "hosp": "안산연세병원", "ns": 7594240, "gp": 2791058, "gm": 0.367523}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "이규동", "hosp": "(주)청원양행(대행)", "ns": 7549550, "gp": -230108, "gm": -0.03048}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "장지원", "hosp": "영남대학교병원", "ns": 7532706, "gp": 2272335, "gm": 0.301663}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "송하윤", "hosp": "의료법인계요병원", "ns": 7522130, "gp": 4478810, "gm": 0.595418}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김창섭", "hosp": "에스포항병원", "ns": 7410984, "gp": 4308236, "gm": 0.581331}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "홍성훈", "hosp": "김포우리병원", "ns": 7106150, "gp": 2082720, "gm": 0.293087}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "이양우", "hosp": "오산한국병원", "ns": 7039200, "gp": 2162581, "gm": 0.30722}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김진환", "hosp": "경산세명병원", "ns": 7018320, "gp": 3717902, "gm": 0.529742}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "박수빈", "hosp": "삼성생명공익재단삼성서울병원", "ns": 6888940, "gp": 440618, "gm": 0.06396}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "정준천", "hosp": "고창병원", "ns": 6817709, "gp": 3750773, "gm": 0.550152}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "오세원", "hosp": "강남병원", "ns": 6710400, "gp": 3030400, "gm": 0.451598}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "의료법인효경의료재단 효성요양병원", "ns": 6178223, "gp": 2417865, "gm": 0.391353}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "박창현", "hosp": "서울아산병원", "ns": 5978675, "gp": 1304588, "gm": 0.218207}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "강동준", "hosp": "경북대학교병원", "ns": 5925100, "gp": 369700, "gm": 0.062396}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "김재윤", "hosp": "양산병원", "ns": 5852541, "gp": 3332491, "gm": 0.569409}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "예승수", "hosp": "괴정병원", "ns": 5845997, "gp": 2326452, "gm": 0.397956}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "나욱진", "hosp": "하나병원", "ns": 5720570, "gp": 772473, "gm": 0.135034}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "박지훈", "hosp": "메디인병원", "ns": 5629733, "gp": 4113912, "gm": 0.730747}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "주식회사 위메드팜(대행)", "ns": 5374590, "gp": 647070, "gm": 0.120394}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "김영원", "hosp": "마인드병원", "ns": 5365920, "gp": 2519423, "gm": 0.469523}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "함승재", "hosp": "대전을지병원", "ns": 5329362, "gp": 1830311, "gm": 0.343439}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "김상덕", "hosp": "시립보라매병원", "ns": 5305953, "gp": 305039, "gm": 0.05749}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)유앤미팜(대행)", "ns": 5227095, "gp": 2763849, "gm": 0.528754}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "정상훈", "hosp": "김해복음병원", "ns": 5218353, "gp": 3359379, "gm": 0.643762}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "류상연", "hosp": "목포한국병원", "ns": 5169225, "gp": 2302398, "gm": 0.445405}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유현덕", "hosp": "세광병원", "ns": 5158360, "gp": 2877185, "gm": 0.557771}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김진환", "hosp": "의료법인 근원의료재단 경산중앙병원", "ns": 5156337, "gp": 2394488, "gm": 0.464378}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "강수진", "hosp": "광주시립정신병원", "ns": 4896884, "gp": 1553718, "gm": 0.317287}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "의료법인 백천의료재단 바로본병원", "ns": 4881464, "gp": 3712075, "gm": 0.760443}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김경주", "hosp": "서울의료원", "ns": 4836201, "gp": -2356174, "gm": -0.487195}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "강동준", "hosp": "보광병원", "ns": 4798609, "gp": 1500590, "gm": 0.312714}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "장지원", "hosp": "동국대학교의과대학 경주병원", "ns": 4660465, "gp": 713325, "gm": 0.153059}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "박정현", "hosp": "봄내병원", "ns": 4611594, "gp": -283267, "gm": -0.061425}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "조민호", "hosp": "순천향대 서울병원", "ns": 4571800, "gp": 1727742, "gm": 0.377913}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "박창현", "hosp": "건대부속 서울병원", "ns": 4530044, "gp": 772379, "gm": 0.170501}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이훈구", "hosp": "의료법인영경의료재단전주병원", "ns": 4436400, "gp": 534240, "gm": 0.120422}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유현덕", "hosp": "병원의료법인 동강의료재단 동천병원", "ns": 4209575, "gp": 2005539, "gm": 0.476423}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "국립부곡병원", "ns": 4175900, "gp": 1436878, "gm": 0.344088}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "이승석", "hosp": "원광종합병원", "ns": 4129290, "gp": 2804004, "gm": 0.679052}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "(주)한솔약품(대행)", "ns": 4068369, "gp": 1301944, "gm": 0.320016}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "홍성남", "hosp": "동강병원", "ns": 3814870, "gp": 2008770, "gm": 0.526563}, {"dept": "병의원영업1부", "team": "북부 의원팀", "course": "양정민", "hosp": "동두천중앙성모병원", "ns": 3752760, "gp": 451320, "gm": 0.120263}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김호선", "hosp": "서울대학", "ns": 3752401, "gp": -2480425, "gm": -0.661023}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이도희", "hosp": "박종호정신과의원", "ns": 3751680, "gp": 3215238, "gm": 0.857013}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "김영원", "hosp": "마음먼저정신건강의학과", "ns": 3751020, "gp": 971606, "gm": 0.259024}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "이규동", "hosp": "은평연세병원", "ns": 3711300, "gp": 485580, "gm": 0.130838}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "주영진", "hosp": "인천참사랑병원", "ns": 3616104, "gp": 2163357, "gm": 0.598256}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "삼일병원", "ns": 3613090, "gp": 334150, "gm": 0.092483}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "김재윤", "hosp": "화창한병원", "ns": 3570000, "gp": 1456200, "gm": 0.407899}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유해서", "hosp": "제이공감정신건강의학과의원", "ns": 3461860, "gp": 1592321, "gm": 0.459961}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "변강훈", "hosp": "분당서울대학교병원", "ns": 3423505, "gp": -17299, "gm": -0.005053}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "최지영", "hosp": "명지병원", "ns": 3411790, "gp": 1154718, "gm": 0.338449}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "박창현", "hosp": "한양대학교구리병원", "ns": 3275620, "gp": 1142983, "gm": 0.348936}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)대일약품(대행)", "ns": 3190475, "gp": 552570, "gm": 0.173194}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "장지원", "hosp": "계명대학교의과대학 경주동산병원", "ns": 3100700, "gp": 230309, "gm": 0.074277}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "김현태", "hosp": "의료법인양진의료재단 성세아이들병원", "ns": 3083230, "gp": 531430, "gm": 0.172361}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "최지영", "hosp": "동국대일산불교병원", "ns": 2946543, "gp": 360029, "gm": 0.122187}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "류상연", "hosp": "KS병원", "ns": 2846530, "gp": 1343634, "gm": 0.472025}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "보강병원", "ns": 2793000, "gp": 2385531, "gm": 0.854111}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "태종약품(주)(대행)", "ns": 2768030, "gp": 554450, "gm": 0.200305}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "최원영", "hosp": "연세조은정신건강의학과의원", "ns": 2739492, "gp": 881855, "gm": 0.321905}, {"dept": "병의원영업2부", "team": "병의원영업B", "course": "허창성", "hosp": "첼로병원", "ns": 2722395, "gp": 2021245, "gm": 0.742451}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "조유경", "hosp": "내안에병원", "ns": 2685050, "gp": 1072186, "gm": 0.399317}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "한양류마디병원", "ns": 2624060, "gp": 455600, "gm": 0.173624}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유현덕", "hosp": "울산병원", "ns": 2604520, "gp": 623554, "gm": 0.239412}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "양정우", "hosp": "두암기독병원", "ns": 2586436, "gp": 319792, "gm": 0.123642}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "김상도내과의원", "ns": 2533050, "gp": 954870, "gm": 0.376965}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "강정호", "hosp": "경상국립대학교병원", "ns": 2515428, "gp": -2376760, "gm": -0.944873}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "변강훈", "hosp": "원광대학교의과대학산본병원", "ns": 2500180, "gp": 1276061, "gm": 0.510388}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "류상연", "hosp": "다정한병원", "ns": 2439749, "gp": 982968, "gm": 0.402897}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "황주봉", "hosp": "인곡자애병원", "ns": 2436920, "gp": 704142, "gm": 0.288948}, {"dept": "병의원영업1부", "team": "동부 의원팀", "course": "권경선", "hosp": "윤서병원", "ns": 2432135, "gp": 1221920, "gm": 0.502406}, {"dept": "병의원영업2부", "team": "병의원영업B", "course": "허창성", "hosp": "의료법인노은의료재단 도은병원", "ns": 2411160, "gp": 871320, "gm": 0.36137}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "조장근", "hosp": "성가롤로병원", "ns": 2385540, "gp": 449080, "gm": 0.188251}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김경주", "hosp": "의정부 을지대학교병원", "ns": 2359785, "gp": 726893, "gm": 0.308033}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "조민호", "hosp": "(의)삼성의료재단", "ns": 2353830, "gp": 679655, "gm": 0.288744}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김수현", "hosp": "강동성심병원", "ns": 2310051, "gp": 762888, "gm": 0.330247}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "김선명", "hosp": "의료법인인산의료재단메트로병원", "ns": 2271365, "gp": 1569636, "gm": 0.691054}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "이재원", "hosp": "중앙대학교병원", "ns": 2269520, "gp": 925383, "gm": 0.407744}, {"dept": "병의원영업2부", "team": "병의원영업B", "course": "허창성", "hosp": "효성병원", "ns": 2250457, "gp": 373720, "gm": 0.166064}, {"dept": "병의원영업2부", "team": "인천 의원팀", "course": "박준혁", "hosp": "인천백병원", "ns": 2243940, "gp": 276930, "gm": 0.123412}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "김선명", "hosp": "안양샘병원", "ns": 2160360, "gp": 433053, "gm": 0.200454}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "예승수", "hosp": "의료법인은성의료재단좋은삼선병원", "ns": 2158780, "gp": 1534704, "gm": 0.710913}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이훈구", "hosp": "부안성모병원", "ns": 2140966, "gp": 252530, "gm": 0.117951}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "강수진", "hosp": "고흥병원", "ns": 2138340, "gp": 1350093, "gm": 0.631374}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "문주리", "hosp": "의료법인한마음의료재단 여수제일병원", "ns": 2135320, "gp": 349197, "gm": 0.163534}, {"dept": "병의원영업1부", "team": "북부 의원팀", "course": "양정민", "hosp": "인화병원", "ns": 2048760, "gp": 888824, "gm": 0.433835}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "김재윤", "hosp": "강일병원", "ns": 2027540, "gp": 889090, "gm": 0.438507}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)성주약품(대행)", "ns": 2026069, "gp": 1051223, "gm": 0.518848}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "이재원", "hosp": "보바스병원(하남점)", "ns": 2000980, "gp": 1276519, "gm": 0.637947}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유현덕", "hosp": "울산대학병원", "ns": 1984130, "gp": 1303730, "gm": 0.657079}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "양정우", "hosp": "광주미래병원", "ns": 1953208, "gp": 1147444, "gm": 0.587466}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "이경희", "hosp": "제주의료원", "ns": 1922760, "gp": 120600, "gm": 0.062722}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "염정훈", "hosp": "더휴정신건강의학과의원", "ns": 1877630, "gp": 965283, "gm": 0.514097}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "박제환", "hosp": "서울성심병원", "ns": 1862556, "gp": 225720, "gm": 0.121188}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "송하윤", "hosp": "의료법인용인정신병원", "ns": 1855510, "gp": 1236933, "gm": 0.666627}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "변호철", "hosp": "염광의원", "ns": 1821300, "gp": 321300, "gm": 0.176412}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유금환", "hosp": "의료법인감을의료재단갑을장유병원", "ns": 1812065, "gp": 311525, "gm": 0.171917}, {"dept": "병의원영업1부", "team": "북부 의원팀", "course": "송범석", "hosp": "마인드웰병원", "ns": 1805720, "gp": 1025161, "gm": 0.56773}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "구대환", "hosp": "광명성애병원", "ns": 1774560, "gp": 213696, "gm": 0.120422}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "조장근", "hosp": "전남대병원", "ns": 1746594, "gp": 207034, "gm": 0.118536}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "김재윤", "hosp": "양산부산대학교병원", "ns": 1733210, "gp": 121091, "gm": 0.069865}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "정민영", "hosp": "강서필병원", "ns": 1715000, "gp": 1161750, "gm": 0.677405}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "송하윤", "hosp": "이음병원", "ns": 1714360, "gp": 1001910, "gm": 0.584422}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "대구의료원", "ns": 1703436, "gp": 419919, "gm": 0.246513}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "김진성", "hosp": "혜강병원", "ns": 1699410, "gp": 1296013, "gm": 0.762625}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김호선", "hosp": "노원을지", "ns": 1663213, "gp": 200093, "gm": 0.120305}, {"dept": "병의원영업1부", "team": "동부 의원팀", "course": "권경선", "hosp": "현대병원", "ns": 1663066, "gp": 202796, "gm": 0.121941}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "부산시립정신병원", "ns": 1656345, "gp": 722147, "gm": 0.435988}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "마루약품(주)(대행)", "ns": 1629375, "gp": 372950, "gm": 0.228891}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "첨단종합병원", "ns": 1591700, "gp": 355240, "gm": 0.223183}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "이희준", "hosp": "청담성모정신건강의학과의원", "ns": 1586860, "gp": 607084, "gm": 0.382569}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "구대환", "hosp": "에이치플러스양지병원", "ns": 1574589, "gp": 190513, "gm": 0.120992}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "장솔", "hosp": "청주성모병원", "ns": 1565450, "gp": 335843, "gm": 0.214535}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "김재윤", "hosp": "온병원", "ns": 1557264, "gp": 796817, "gm": 0.511677}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "동남권원자력의학원", "ns": 1516941, "gp": -261747, "gm": -0.172549}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "이철송", "hosp": "서산 중앙병원", "ns": 1506830, "gp": 517377, "gm": 0.343355}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "이세호", "hosp": "창원경상대학교병원", "ns": 1469180, "gp": -278030, "gm": -0.189242}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "신동윤", "hosp": "김천신경정신건강의원", "ns": 1460730, "gp": 449564, "gm": 0.307767}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "강동준", "hosp": "김천제일병원", "ns": 1441800, "gp": 904200, "gm": 0.627133}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "주영진", "hosp": "부민서울병원", "ns": 1436020, "gp": 662098, "gm": 0.461065}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "정준천", "hosp": "원광대학교병원", "ns": 1434405, "gp": 13215, "gm": 0.009213}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "정민영", "hosp": "이지정신건강의학과의원", "ns": 1431990, "gp": 469594, "gm": 0.327931}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "나욱진", "hosp": "의료법인합포의료재단마산우리요양병원", "ns": 1431779, "gp": 737383, "gm": 0.515012}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "김선명", "hosp": "평촌성심병원", "ns": 1425540, "gp": 414392, "gm": 0.290691}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "변강훈", "hosp": "차의과학대학교분당차병원", "ns": 1413110, "gp": 252000, "gm": 0.17833}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "주재형", "hosp": "해운대자명병원", "ns": 1403350, "gp": 874059, "gm": 0.622837}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "박지훈", "hosp": "내맘애정신건강의학과의원", "ns": 1388245, "gp": 58431, "gm": 0.04209}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "문주리", "hosp": "의료법인주영의료재단동인요양병원", "ns": 1384188, "gp": 830546, "gm": 0.600024}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "장지원", "hosp": "천주성삼병원", "ns": 1367280, "gp": 165840, "gm": 0.121292}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "김진성", "hosp": "음성소망병원", "ns": 1359370, "gp": 769581, "gm": 0.566131}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "조성찬", "hosp": "근로복지공단 인천병원", "ns": 1341810, "gp": -1020690, "gm": -0.760681}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)앤플러스팜(대행)", "ns": 1317620, "gp": 818428, "gm": 0.621141}, {"dept": "병의원영업1부", "team": "북부 의원팀", "course": "양정민", "hosp": "추병원", "ns": 1317320, "gp": 182568, "gm": 0.138591}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "현동준", "hosp": "경상북도 안동의료원", "ns": 1294830, "gp": 1100111, "gm": 0.849618}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "이규동", "hosp": "일산병원", "ns": 1287745, "gp": 485375, "gm": 0.376919}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이호선", "hosp": "굿모닝병원", "ns": 1273241, "gp": 610974, "gm": 0.479857}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "홍성훈", "hosp": "의료법인인봉의료재단 뉴고려병원", "ns": 1270800, "gp": 721512, "gm": 0.567762}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "송세훈", "hosp": "영암한국병원", "ns": 1258200, "gp": 568200, "gm": 0.451598}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "주재형", "hosp": "와이디정신건강의학과의원", "ns": 1247540, "gp": 269860, "gm": 0.216314}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "이세호", "hosp": "진해연세에스병원", "ns": 1247285, "gp": 811441, "gm": 0.650566}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이훈구", "hosp": "전북대병원", "ns": 1246310, "gp": -837450, "gm": -0.671943}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "라라케어 주식회사(대행)", "ns": 1236360, "gp": 59000, "gm": 0.047721}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "홍성남", "hosp": "의료법인 인당의료재단 해운대부민병원", "ns": 1222560, "gp": 172560, "gm": 0.141146}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "조은도", "hosp": "동명병원", "ns": 1214375, "gp": 208464, "gm": 0.171664}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "구병원", "ns": 1200020, "gp": 74300, "gm": 0.061916}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이충연", "hosp": "다움병원", "ns": 1194359, "gp": 680826, "gm": 0.570035}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "영광종합병원", "ns": 1193780, "gp": 1017035, "gm": 0.851945}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "조은상", "hosp": "마음온정신건강의학과의원", "ns": 1176000, "gp": 185670, "gm": 0.157883}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "곽경호", "hosp": "글로벌튼튼병원", "ns": 1156560, "gp": 411756, "gm": 0.356018}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "하당목포이비인후과의원", "ns": 1145460, "gp": 305460, "gm": 0.26667}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "오세원", "hosp": "아주대학교의료원", "ns": 1145110, "gp": 313788, "gm": 0.274024}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김창섭", "hosp": "의료법인성하의료재단 포항인성병원", "ns": 1144285, "gp": 479214, "gm": 0.418789}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "박정현", "hosp": "강릉아산병원", "ns": 1120320, "gp": 219240, "gm": 0.195694}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "김규호", "hosp": "안정신과의원", "ns": 1119260, "gp": 250397, "gm": 0.223716}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "황재혁", "hosp": "동탄성심병원", "ns": 1100304, "gp": 155304, "gm": 0.141146}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "김재윤", "hosp": "해동병원", "ns": 1095100, "gp": 286300, "gm": 0.261437}, {"dept": "병의원영업2부", "team": "병의원영업B", "course": "김승삼", "hosp": "루카스병원", "ns": 1072165, "gp": 644588, "gm": 0.601202}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김호선", "hosp": "상계백", "ns": 1067880, "gp": 380047, "gm": 0.355889}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "대구보건대학교병원", "ns": 1052993, "gp": -109753, "gm": -0.104229}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "청아의료재단 동서병원", "ns": 1023470, "gp": 350290, "gm": 0.342257}, {"dept": "병의원영업2부", "team": "인천 의원팀", "course": "이동옥", "hosp": "인천의료원", "ns": 1021817, "gp": 170437, "gm": 0.166798}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "이경희", "hosp": "한국병원", "ns": 996830, "gp": 171470, "gm": 0.172015}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "의료법인한성재단동아메디병원", "ns": 986595, "gp": 86151, "gm": 0.087322}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "김상덕", "hosp": "고려대의과대학부속구로병원", "ns": 970987, "gp": 561021, "gm": 0.577784}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "함승재", "hosp": "건양대병원", "ns": 964692, "gp": 447832, "gm": 0.464223}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "현동준", "hosp": "드림병원", "ns": 962735, "gp": 129410, "gm": 0.134419}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "조성찬", "hosp": "의료법인상록의료재단화정병원", "ns": 949580, "gp": 500180, "gm": 0.526738}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "홍성남", "hosp": "더프라우병원", "ns": 949330, "gp": 336303, "gm": 0.354253}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "양정근", "hosp": "전라북도마음사랑병원", "ns": 947416, "gp": -117028, "gm": -0.123523}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "이정현", "hosp": "의정부의료원", "ns": 946125, "gp": 259404, "gm": 0.274175}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "춘양삼성의원", "ns": 945780, "gp": -32783, "gm": -0.034662}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "조민호", "hosp": "세란병원", "ns": 929710, "gp": 460665, "gm": 0.495494}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "신동윤", "hosp": "김진성 정신건강의학과의원", "ns": 910380, "gp": 316816, "gm": 0.348004}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이도희", "hosp": "세미한병원", "ns": 910309, "gp": 391472, "gm": 0.430043}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "함승재", "hosp": "충남대병원", "ns": 902899, "gp": 347261, "gm": 0.384606}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "서정희", "hosp": "서울호흡안심병원", "ns": 883200, "gp": 167660, "gm": 0.189832}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "이행욱", "hosp": "휴엔병원", "ns": 882315, "gp": 575848, "gm": 0.652656}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이도희", "hosp": "전라북도군산의료원", "ns": 873993, "gp": 247984, "gm": 0.283737}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "이규동", "hosp": "일산백병원", "ns": 872190, "gp": 84690, "gm": 0.0971}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "하경택", "hosp": "아름다운정신과의원", "ns": 863210, "gp": 194556, "gm": 0.225387}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "시티요양병원", "ns": 859320, "gp": 24547, "gm": 0.028566}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "곽경호", "hosp": "의료법인 다원의료재단 영동제일병원", "ns": 859110, "gp": 575647, "gm": 0.67005}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "변호철", "hosp": "위드유정신건강의학과의원", "ns": 856660, "gp": 338108, "gm": 0.394681}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "현동준", "hosp": "대구파티마병원", "ns": 835530, "gp": 249297, "gm": 0.29837}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "최정미신경정신과의원", "ns": 823650, "gp": 345555, "gm": 0.419541}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "제준우", "hosp": "보령엘피스병원", "ns": 814740, "gp": 530514, "gm": 0.651145}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "주식회사 새미래팜(대행)", "ns": 809630, "gp": 420154, "gm": 0.518945}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "인현교", "hosp": "효사랑가족요양병원", "ns": 781200, "gp": 85556, "gm": 0.109518}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "휴사랑의료재단보성제일병원", "ns": 772015, "gp": 310171, "gm": 0.401768}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "하경택", "hosp": "서울이룸정신건강의학과의원", "ns": 770500, "gp": 452800, "gm": 0.58767}, {"dept": "병의원영업1부", "team": "동부 의원팀", "course": "이현우", "hosp": "이광수신경과의원", "ns": 755120, "gp": 460719, "gm": 0.610127}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "안동성소병원", "ns": 743825, "gp": 484512, "gm": 0.651379}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "노휘진", "hosp": "굳센병원", "ns": 724960, "gp": 467360, "gm": 0.64467}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "이정현", "hosp": "다보스병원", "ns": 715920, "gp": 372688, "gm": 0.520572}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "송세훈", "hosp": "순천의료원", "ns": 709585, "gp": 419957, "gm": 0.591835}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이훈구", "hosp": "정읍한국병원", "ns": 705595, "gp": 400187, "gm": 0.567163}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "이희준", "hosp": "마음애사랑의원", "ns": 699042, "gp": 306954, "gm": 0.439107}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김창섭", "hosp": "인성병원", "ns": 693315, "gp": 389029, "gm": 0.561114}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "김재환", "hosp": "문성병원", "ns": 692200, "gp": 91480, "gm": 0.132158}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "남양약품(주)(대행)", "ns": 676092, "gp": 69053, "gm": 0.102135}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "나주고운피부과의원", "ns": 651440, "gp": 480263, "gm": 0.737232}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "정세윤", "hosp": "이자영정신건강의학과의원", "ns": 649100, "gp": 315202, "gm": 0.485598}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "이경희", "hosp": "서귀포의료원", "ns": 640920, "gp": 40200, "gm": 0.062722}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김진환", "hosp": "의료법인경동의료재단효성병원", "ns": 638185, "gp": 83841, "gm": 0.131374}, {"dept": "병의원영업2부", "team": "인천 의원팀", "course": "이동옥", "hosp": "글로리병원", "ns": 610920, "gp": 421945, "gm": 0.690671}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "하경택", "hosp": "동수원병원", "ns": 579540, "gp": 350719, "gm": 0.605168}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "박종명", "hosp": "배성병원", "ns": 575334, "gp": 370500, "gm": 0.643974}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "변강훈", "hosp": "대진의료재단분당제생병원", "ns": 574000, "gp": 49000, "gm": 0.085366}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "김재환", "hosp": "혜원성모병원", "ns": 572740, "gp": 383765, "gm": 0.67005}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김수현", "hosp": "한양대학교병원", "ns": 565941, "gp": 144459, "gm": 0.255254}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "곽경호", "hosp": "대전한국병원", "ns": 550514, "gp": 225320, "gm": 0.40929}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "사상중앙병원", "ns": 533460, "gp": 356183, "gm": 0.667684}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "예승수", "hosp": "좋은강안병원", "ns": 533194, "gp": 280195, "gm": 0.525504}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)여명팜(대행)", "ns": 520800, "gp": 57037, "gm": 0.109518}, {"dept": "병의원영업2부", "team": "서부 의원팀", "course": "문병래", "hosp": "한도병원", "ns": 519560, "gp": 270694, "gm": 0.521007}, {"dept": "병의원영업2부", "team": "인천 의원팀", "course": "이주형", "hosp": "인천적십자병원", "ns": 518732, "gp": 113372, "gm": 0.218556}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "손희철", "hosp": "김철진정신과의원", "ns": 496360, "gp": 162462, "gm": 0.327306}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "지엠헬스케어(주)(대행)", "ns": 484550, "gp": -40450, "gm": -0.08348}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "오세원", "hosp": "수원덕산병원", "ns": 480600, "gp": 301400, "gm": 0.627133}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "류상연", "hosp": "조선대병원", "ns": 474336, "gp": 292219, "gm": 0.616058}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "정세윤", "hosp": "은헌정정신건강의학과의원", "ns": 459120, "gp": 287023, "gm": 0.625159}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "보은병원", "ns": 440470, "gp": 280857, "gm": 0.637631}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "양정우", "hosp": "해피뷰병원", "ns": 428085, "gp": 245884, "gm": 0.574382}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "김규호", "hosp": "춘천예현병원", "ns": 427500, "gp": 261921, "gm": 0.61268}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "강정호", "hosp": "(학)성균관대학삼성창원병원", "ns": 424700, "gp": 240356, "gm": 0.565943}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "이수민", "hosp": "마음과마음정신과의원", "ns": 416000, "gp": 213000, "gm": 0.512019}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "(주)영원파마(대행)", "ns": 411150, "gp": 297642, "gm": 0.723927}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "21C한일병원", "ns": 410410, "gp": 244486, "gm": 0.595712}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이충연", "hosp": "바로서면병원", "ns": 409540, "gp": 42664, "gm": 0.104176}, {"dept": "병의원영업2부", "team": "서부 의원팀", "course": "허준명", "hosp": "평촌서울나우병원", "ns": 409540, "gp": 42664, "gm": 0.104176}, {"dept": "병의원영업2부", "team": "서부 의원팀", "course": "조정익", "hosp": "삼성마음안정신건강의학과의원", "ns": 409208, "gp": 177360, "gm": 0.433421}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "함승재", "hosp": "건양대병원_문전", "ns": 406744, "gp": 18748, "gm": 0.046092}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이훈구", "hosp": "정읍병원", "ns": 406440, "gp": 73110, "gm": 0.179879}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김홍현", "hosp": "칠곡군립노인요양병원", "ns": 398618, "gp": 315657, "gm": 0.79188}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "구대환", "hosp": "수원요양병원", "ns": 381920, "gp": 10910, "gm": 0.028566}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김창섭", "hosp": "포항성모병원", "ns": 369820, "gp": 169529, "gm": 0.45841}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "이동훈", "hosp": "동해요양병원", "ns": 365460, "gp": 214117, "gm": 0.585883}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "모라성모의원", "ns": 361732, "gp": -210599, "gm": -0.582198}, {"dept": "병의원영업2부", "team": "병의원영업B", "course": "허창성", "hosp": "청주탑요양병원", "ns": 360840, "gp": 216840, "gm": 0.600931}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "이세호", "hosp": "창원파티마병원", "ns": 355480, "gp": 97584, "gm": 0.274512}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "박종명", "hosp": "의료법인고담의료재단마야병원", "ns": 323938, "gp": 139243, "gm": 0.429845}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김홍현", "hosp": "수성중동병원", "ns": 319510, "gp": 192469, "gm": 0.602389}, {"dept": "병의원영업2부", "team": "중부 의원팀", "course": "박지훈", "hosp": "마음자리정신건강의학과의원", "ns": 315551, "gp": 66446, "gm": 0.21057}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "예승수", "hosp": "인제대학교해운대백병원", "ns": 307924, "gp": 74672, "gm": 0.242502}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "박정현", "hosp": "원주세브란스기독병원", "ns": 307640, "gp": 7280, "gm": 0.023664}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "이승석", "hosp": "좋은날정신건강의학과의원", "ns": 306000, "gp": 162000, "gm": 0.529412}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "강수진", "hosp": "의료법인삼호의료재단 삼호병원", "ns": 305460, "gp": 210972, "gm": 0.690671}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "박정현", "hosp": "강원대학교병원", "ns": 301098, "gp": -51762, "gm": -0.171911}, {"dept": "병의원영업1부", "team": "북부 의원팀", "course": "양정민", "hosp": "서울요양병원", "ns": 300630, "gp": 189166, "gm": 0.629233}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "조장근", "hosp": "재단법인광주기독병원", "ns": 299049, "gp": 51441, "gm": 0.172015}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "박제환", "hosp": "삼육서울병원", "ns": 298185, "gp": 35685, "gm": 0.119674}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "손희철", "hosp": "이광헌정신건강의학과의원", "ns": 289230, "gp": 144677, "gm": 0.500215}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유해서", "hosp": "김규호정신건강의학과의원", "ns": 282500, "gp": 123650, "gm": 0.437699}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "윤경민", "hosp": "홍성한국병원", "ns": 273600, "gp": 153671, "gm": 0.561664}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "김규호", "hosp": "의료법인서인의료재단", "ns": 267270, "gp": 172782, "gm": 0.646471}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "장주호", "hosp": "인하대학교의과대학부속병원", "ns": 263430, "gp": 148041, "gm": 0.561974}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "이정현", "hosp": "경찰병원", "ns": 261138, "gp": 24462, "gm": 0.093674}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "김규호", "hosp": "강원도속초의료원", "ns": 260910, "gp": -1590, "gm": -0.006094}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이충연", "hosp": "의료법인대산의료재단울산기독병원", "ns": 259175, "gp": 178815, "gm": 0.68994}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "이현숙신경정신과의원", "ns": 244380, "gp": 16800, "gm": 0.068745}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "신동윤", "hosp": "경상북도립김천노인전문요양병원", "ns": 243750, "gp": 152296, "gm": 0.624802}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "목포정형외과의원", "ns": 238640, "gp": 124229, "gm": 0.520572}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "장솔", "hosp": "충북대학교병원", "ns": 233378, "gp": -1409518, "gm": -6.039635}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "김상덕", "hosp": "한강성심병원", "ns": 229600, "gp": 88680, "gm": 0.386237}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김홍현", "hosp": "의료법인 안흥의료재단 영남병원", "ns": 229096, "gp": 153506, "gm": 0.67005}, {"dept": "병의원영업2부", "team": "청주 병원팀", "course": "강연모", "hosp": "순천향대학교천안병원", "ns": 228000, "gp": 145210, "gm": 0.636887}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "송세훈", "hosp": "창평우리병원", "ns": 228000, "gp": 145210, "gm": 0.636887}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "송세훈", "hosp": "의료법인경애의료재단담양참사랑병원", "ns": 228000, "gp": 145210, "gm": 0.636887}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "박제환", "hosp": "강동경희대학교병원", "ns": 220185, "gp": 83811, "gm": 0.380639}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "장준원", "hosp": "의료법인동남정신병원", "ns": 219450, "gp": 136660, "gm": 0.62274}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이충연", "hosp": "세나요양병원", "ns": 219280, "gp": 143608, "gm": 0.654908}, {"dept": "병의원영업2부", "team": "광주 병원1팀", "course": "정이수", "hosp": "이지선정신건강의학과의원", "ns": 213240, "gp": -60, "gm": -0.000281}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "신동윤", "hosp": "에스병원", "ns": 200951, "gp": 127982, "gm": 0.636881}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)제이씨헬스케어(대행)", "ns": 194950, "gp": -11438, "gm": -0.058671}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "인현교", "hosp": "의료법인 한길사랑의료재단 한길병원", "ns": 189320, "gp": 110222, "gm": 0.582201}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김홍현", "hosp": "제이원병원", "ns": 183684, "gp": 84376, "gm": 0.459356}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "강석진", "hosp": "대동병원", "ns": 175827, "gp": 102858, "gm": 0.584994}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유금환", "hosp": "박정신건강의학과의원", "ns": 173640, "gp": 120990, "gm": 0.696788}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이충연", "hosp": "벳전문약국(24시리본동물의료센터외)", "ns": 173310, "gp": 114887, "gm": 0.662898}, {"dept": "병의원영업1부", "team": "동부 의원팀", "course": "권경선", "hosp": "루엔정신건강의학과의원", "ns": 171822, "gp": 71653, "gm": 0.417016}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "이경희", "hosp": "에스(S)-중앙병원", "ns": 170910, "gp": 20730, "gm": 0.121292}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "김재환", "hosp": "서안병원", "ns": 159755, "gp": 96235, "gm": 0.602389}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "이도희", "hosp": "마음편한정신건강의학과", "ns": 152730, "gp": 69255, "gm": 0.45345}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "김창섭", "hosp": "대구가톨릭대학교 칠곡가톨릭병원", "ns": 152010, "gp": 96100, "gm": 0.632194}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "홍성남", "hosp": "강동병원", "ns": 147500, "gp": 82700, "gm": 0.560678}, {"dept": "종병영업부", "team": "간납도매팀", "course": "강승묵", "hosp": "서울의약주식회사(대행)", "ns": 138993, "gp": 5347, "gm": 0.038471}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "류상연", "hosp": "목포중앙병원", "ns": 138990, "gp": 70329, "gm": 0.506001}, {"dept": "병의원영업1부", "team": "북부 의원팀", "course": "이슬기", "hosp": "소정정신건강의학과의원", "ns": 137280, "gp": 41661, "gm": 0.303475}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "의료법인만전의료재단장유효요양병원", "ns": 137050, "gp": 99214, "gm": 0.723927}, {"dept": "병의원영업2부", "team": "인천 의원팀", "course": "이제현", "hosp": "의료법인안은의료재단부평세림병원", "ns": 136580, "gp": 80422, "gm": 0.588827}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "조성찬", "hosp": "인천힘찬종합병원", "ns": 134182, "gp": 29182, "gm": 0.217481}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "조은상", "hosp": "엄용섭정신건강의학과의원", "ns": 129420, "gp": 48540, "gm": 0.375058}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "인현교", "hosp": "신세계병원", "ns": 128250, "gp": 78576, "gm": 0.61268}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "김재환", "hosp": "푸른효요양병원", "ns": 127910, "gp": 90074, "gm": 0.7042}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "박수빈", "hosp": "연세대학교의과대학강남세브란스병원", "ns": 127840, "gp": 70635, "gm": 0.552524}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "맑은샘센텀병원", "ns": 124156, "gp": 18904, "gm": 0.152258}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "조은상", "hosp": "하루정신건강의학과", "ns": 119640, "gp": 36440, "gm": 0.30458}, {"dept": "병의원영업2부", "team": "인천 의원팀", "course": "임현택", "hosp": "해와별정신건강의학과의원", "ns": 106155, "gp": 35486, "gm": 0.334282}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)우리약품(대행)", "ns": 106050, "gp": 8391, "gm": 0.079119}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "윤경민", "hosp": "당진요양병원", "ns": 104160, "gp": 11407, "gm": 0.109518}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "유현덕", "hosp": "의료법인은성의료재단좋은삼정병원", "ns": 102440, "gp": 53022, "gm": 0.517588}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "김재환", "hosp": "성주제일병원", "ns": 98190, "gp": 38384, "gm": 0.390914}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "류상연", "hosp": "목포시의료원", "ns": 97095, "gp": 38351, "gm": 0.394982}, {"dept": "병의원영업1부", "team": "남부 의원팀", "course": "하경택", "hosp": "희망정신건강의학과의원", "ns": 96000, "gp": 48000, "gm": 0.5}, {"dept": "병의원영업2부", "team": "전주 병원팀", "course": "양정근", "hosp": "김형욱정신건강학과", "ns": 92740, "gp": 32934, "gm": 0.35512}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "강동준", "hosp": "차병원", "ns": 85910, "gp": 48635, "gm": 0.566119}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "박정현", "hosp": "한림대학부속춘천성심병원", "ns": 81140, "gp": 8004, "gm": 0.098638}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "산청요양병원", "ns": 74950, "gp": 18067, "gm": 0.241053}, {"dept": "병의원영업1부", "team": "병의원영업A", "course": "홍성남", "hosp": "동의의료원", "ns": 73638, "gp": 39315, "gm": 0.533893}, {"dept": "병의원영업2부", "team": "광주 병원2팀", "course": "조요성", "hosp": "화순군립요양병원", "ns": 69820, "gp": -6040, "gm": -0.086508}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "(주)베텍코리아(대행)", "ns": 63000, "gp": 29700, "gm": 0.471429}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "거제백병원", "ns": 63000, "gp": 27770, "gm": 0.440794}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "김상덕", "hosp": "강남성심병원", "ns": 61128, "gp": 8628, "gm": 0.141146}, {"dept": "병의원영업1부", "team": "창원 병원팀", "course": "유승보", "hosp": "(의)수의료재단 서청솔요양병원", "ns": 47240, "gp": 2731, "gm": 0.057805}, {"dept": "종병영업부", "team": "간납도매팀", "course": "나성규", "hosp": "주식회사 피엘그룹(대행)", "ns": 45955, "gp": 3636, "gm": 0.079119}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "이충연", "hosp": "재단법인 정토마을 자재병원", "ns": 43856, "gp": 28722, "gm": 0.654908}, {"dept": "병의원영업1부", "team": "대구 병원2팀", "course": "노휘진", "hosp": "범어아이정신건강의학과의원", "ns": 43364, "gp": 6676, "gm": 0.153963}, {"dept": "종병영업부", "team": "종병 영업1팀", "course": "김경주", "hosp": "한일병원", "ns": 42730, "gp": -257630, "gm": -6.029253}, {"dept": "병의원영업1부", "team": "북부 의원팀", "course": "양정민", "hosp": "송추정신병원", "ns": 37648, "gp": 52045, "gm": 1.382423}, {"dept": "병의원영업1부", "team": "부산 병원1팀", "course": "조은상", "hosp": "우리정신건강의학과의원", "ns": 37455, "gp": 19068, "gm": 0.509101}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "신동윤", "hosp": "신애정신병원", "ns": 35637, "gp": 15564, "gm": 0.436737}, {"dept": "종병영업부", "team": "종병 영업3팀", "course": "홍성훈", "hosp": "순천향대학교부속부천병원", "ns": 29236, "gp": 18760, "gm": 0.641659}, {"dept": "병의원영업1부", "team": "대구 병원1팀", "course": "신동윤", "hosp": "월배정신건강의학과의원", "ns": 26730, "gp": -939, "gm": -0.035112}, {"dept": "병의원영업1부", "team": "부산 병원2팀", "course": "예승수", "hosp": "부산대학교병원", "ns": 24085, "gp": -1671815, "gm": -69.41312}, {"dept": "종병영업부", "team": "종병 영업2팀", "course": "박수빈", "hosp": "강남차병원", "ns": 12220, "gp": 1153, "gm": 0.09432}, {"dept": "병의원영업1부", "team": "원주 병원팀", "course": "이동훈", "hosp": "의료재단금석의료재단 영월푸른사랑병원", "ns": -51406, "gp": -15512, "gm": 0.30176}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "곽경호", "hosp": "영동군보건소", "ns": -57627, "gp": -16516, "gm": 0.286606}, {"dept": "병의원영업2부", "team": "대전 병원팀", "course": "제준우", "hosp": "보령시립노인전문병원", "ns": -206380, "gp": -131580, "gm": 0.637562}, {"dept": "병의원영업1부", "team": "동부 의원팀", "course": "권경선", "hosp": "(주)에이머스팜코리아(대행)", "ns": -402311, "gp": -223817, "gm": 0.556328}];
+
+var fmtN = n => n < 0
+  ? '-' + Math.abs(n).toLocaleString('ko-KR')
+  : n.toLocaleString('ko-KR');
+var fmtW = n => fmtN(n) + '원';
+var fmtS = n => {
+  var a = Math.abs(n);
+  var s = n < 0 ? '-' : '';
+  if(a >= 1e8) return s + (a/1e8).toFixed(1) + '억';
+  if(a >= 1e4) return s + Math.round(a/1e4).toLocaleString('ko-KR') + '만';
+  return fmtN(n);
+};
+var fmtP = v => (v*100).toFixed(1) + '%';
+
+// 계층 구조
+var depts = ['전체', ...new Set(G_RAW.map(d=>d.dept))].sort((a,b)=>a==='전체'?-1:b==='전체'?1:a.localeCompare(b,'ko'));
+var selDept='전체', selTeam='전체', selCourse='전체';
+
+// 집계 함수
+function agg(rows){
+  var ns = rows.reduce((a,d)=>a+d.ns,0);
+  var gp = rows.reduce((a,d)=>a+d.gp,0);
+  var gm = ns ? gp/ns : 0;
+  return {ns, gp, gm};
+}
+
+// 필터된 데이터
+function filtered(){
+  return G_RAW.filter(d =>
+    (selDept==='전체' || d.dept===selDept) &&
+    (selTeam==='전체' || d.team===selTeam) &&
+    (selCourse==='전체' || d.course===selCourse)
+  );
+}
+
+// 드롭다운 초기화
+function buildDept(){
+  var sel = document.getElementById('deptSel');
+  sel.innerHTML = '';
+  depts.forEach(d=>{
+    var o = document.createElement('option');
+    o.value=d; o.textContent=d; if(d===selDept)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+function buildTeam(){
+  var sel = document.getElementById('teamSel');
+  sel.innerHTML=''; sel.disabled = selDept==='전체';
+  var base = selDept==='전체' ? [] : [...new Set(G_RAW.filter(d=>d.dept===selDept).map(d=>d.team))].sort((a,b)=>a.localeCompare(b,'ko'));
+  var opts = selDept==='전체' ? ['전체'] : ['전체', ...base];
+  opts.forEach(t=>{
+    var o=document.createElement('option');
+    o.value=t; o.textContent=t; if(t===selTeam)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+function buildCourse(){
+  var sel = document.getElementById('courseSel');
+  sel.innerHTML='';
+  var rows = G_RAW.filter(d=>
+    (selDept==='전체'||d.dept===selDept)&&
+    (selTeam==='전체'||d.team===selTeam)
+  );
+  sel.disabled = selTeam==='전체';
+  var base = [...new Set(rows.map(d=>d.course))].sort((a,b)=>a.localeCompare(b,'ko'));
+  var opts = selTeam==='전체' ? ['전체'] : ['전체', ...base];
+  opts.forEach(c=>{
+    var o=document.createElement('option');
+    o.value=c; o.textContent=c; if(c===selCourse)o.selected=true;
+    sel.appendChild(o);
+  });
+}
+
+function onDept(){ selDept=document.getElementById('deptSel').value; selTeam='전체'; selCourse='전체'; buildTeam(); buildCourse(); render(); }
+function onTeam(){ selTeam=document.getElementById('teamSel').value; selCourse='전체'; buildCourse(); render(); }
+function onCourse(){ selCourse=document.getElementById('courseSel').value; render(); }
+
+function goBack(){
+  if(selCourse!=='전체'){ selCourse='전체'; buildCourse(); }
+  else if(selTeam!=='전체'){ selTeam='전체'; selCourse='전체'; buildTeam(); buildCourse(); }
+  else if(selDept!=='전체'){ selDept='전체'; selTeam='전체'; selCourse='전체'; buildDept(); buildTeam(); buildCourse(); }
+  render();
+}
+
+// 차트 데이터 결정
+function chartRows(){
+  // 전체 → 영업부별
+  if(selDept==='전체'){
+    var m={};
+    G_RAW.forEach(d=>{ if(!m[d.dept])m[d.dept]={name:d.dept,ns:0,gp:0}; m[d.dept].ns+=d.ns; m[d.dept].gp+=d.gp; });
+    return Object.values(m).sort((a,b)=>b.ns-a.ns).map(d=>({...d,gm:d.ns?d.gp/d.ns:0}));
+  }
+  // 영업부 선택 → 팀별
+  if(selTeam==='전체'){
+    var m={};
+    G_RAW.filter(d=>d.dept===selDept).forEach(d=>{ if(!m[d.team])m[d.team]={name:d.team,ns:0,gp:0}; m[d.team].ns+=d.ns; m[d.team].gp+=d.gp; });
+    return Object.values(m).sort((a,b)=>b.ns-a.ns).map(d=>({...d,gm:d.ns?d.gp/d.ns:0}));
+  }
+  // 팀 선택 → 코스별
+  if(selCourse==='전체'){
+    var m={};
+    G_RAW.filter(d=>d.dept===selDept&&d.team===selTeam).forEach(d=>{ if(!m[d.course])m[d.course]={name:d.course,ns:0,gp:0}; m[d.course].ns+=d.ns; m[d.course].gp+=d.gp; });
+    return Object.values(m).sort((a,b)=>b.ns-a.ns).map(d=>({...d,gm:d.ns?d.gp/d.ns:0}));
+  }
+  // 코스 선택 → 간납처별
+  return G_RAW.filter(d=>d.dept===selDept&&d.team===selTeam&&d.course===selCourse)
+    .sort((a,b)=>b.ns-a.ns)
+    .map(d=>({name:d.hosp,ns:d.ns,gp:d.gp,gm:d.gm}));
+}
+
+// 툴팁
+function showTip(e, name, ns, gp, gm){
+  var t=document.getElementById('tooltip');
+  document.getElementById('tt-name').textContent=name;
+  document.getElementById('tt-ns').textContent='Net-Sales: '+fmtW(ns);
+  document.getElementById('tt-gp').textContent='Gross Profit: '+fmtW(gp);
+  document.getElementById('tt-gm').textContent='Gross Margin: '+fmtP(gm);
+  t.style.display='block';
+  moveTip(e);
+}
+function moveTip(e){ var t=document.getElementById('tooltip'); t.style.left=(e.clientX+14)+'px'; t.style.top=(e.clientY-10)+'px'; }
+function hideTip(){ document.getElementById('tooltip').style.display='none'; }
+
+// 드릴다운 클릭
+function drillDown(name){
+  if(selDept==='전체'){
+    selDept=name;
+    document.getElementById('deptSel').value=name;
+    buildTeam(); buildCourse();
+  } else if(selTeam==='전체'){
+    selTeam=name;
+    document.getElementById('teamSel').value=name;
+    buildCourse();
+  } else if(selCourse==='전체'){
+    selCourse=name;
+    document.getElementById('courseSel').value=name;
+  }
+  render();
+}
+
+function drawDeptCards(rows){
+  // 영업부 전체 화면: 세로 KPI 카드 형태
+  var el = document.getElementById('chart');
+  var html = '<div style="display:flex;flex-direction:column;gap:16px;padding:4px 0">';
+  rows.forEach(d => {
+    var gmColor = d.gm>=0.3?'#16a34a':d.gm>=0?'#d97706':'#dc2626';
+    var fullName = d.name.replace(/'/g,"\'").replace(/`/g,'\`');
+    html += `
+    <div onclick="drillDown('${fullName}')" style="background:#fff;border:1.5px solid #e5e7eb;border-radius:14px;padding:20px 24px;cursor:pointer;transition:box-shadow .15s;display:flex;align-items:center;gap:0"
+      onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.10)';this.style.borderColor='#93c5fd'"
+      onmouseout="this.style.boxShadow='none';this.style.borderColor='#e5e7eb'">
+      <!-- 영업부명 -->
+      <div style="width:160px;min-width:160px">
+        <div style="font-size:16px;font-weight:800;color:#1e293b">${d.name}</div>
+        <div style="font-size:11px;color:#94a3b8;margin-top:3px">클릭하여 팀별 보기 →</div>
+      </div>
+      <!-- 구분선 -->
+      <div style="width:1px;background:#f1f5f9;height:48px;margin:0 24px"></div>
+      <!-- Net-Sales -->
+      <div style="flex:1;text-align:center">
+        <div style="font-size:11px;font-weight:700;color:#3b82f6;margin-bottom:4px">Net-Sales <span style="font-weight:400;color:#94a3b8">(실제 매출)</span></div>
+        <div style="font-size:22px;font-weight:900;color:#1d4ed8;letter-spacing:-.5px">${fmtN(d.ns)}원</div>
+      </div>
+      <!-- 구분선 -->
+      <div style="width:1px;background:#f1f5f9;height:48px;margin:0 24px"></div>
+      <!-- Gross Profit -->
+      <div style="flex:1;text-align:center">
+        <div style="font-size:11px;font-weight:700;color:#8b5cf6;margin-bottom:4px">Gross Profit <span style="font-weight:400;color:#94a3b8">(매출총이익)</span></div>
+        <div style="font-size:22px;font-weight:900;color:#6d28d9;letter-spacing:-.5px">${fmtN(d.gp)}원</div>
+      </div>
+      <!-- 구분선 -->
+      <div style="width:1px;background:#f1f5f9;height:48px;margin:0 24px"></div>
+      <!-- Gross Margin -->
+      <div style="flex:1;text-align:center">
+        <div style="font-size:11px;font-weight:700;color:${gmColor};margin-bottom:4px">Gross Margin <span style="font-weight:400;color:#94a3b8">(원가 제외 이익율)</span></div>
+        <div style="font-size:28px;font-weight:900;color:${gmColor};letter-spacing:-.5px">${fmtP(d.gm)}</div>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function drawChart(rows){
+  var el = document.getElementById('chart');
+  if(!rows.length){ el.innerHTML='<div style="text-align:center;padding:40px;color:#9ca3af">데이터 없음</div>'; return; }
+  if(selDept==='전체'){ drawDeptCards(rows); return; }
+
+  var clickable = selCourse==='전체';
+
+  // ── 물결 축 break 세로 막대 차트 ──────────────────────────
+  var n = rows.length;
+  var sorted = [...rows].sort((a,b)=>b.ns-a.ns);
+  var maxNS = sorted[0].ns;
+  var minNS = sorted[sorted.length-1].ns;
+  var median = sorted[Math.floor(n/2)].ns;
+
+  // 상단영역(top): maxNS ~ breakHigh, 하단영역(bot): breakLow ~ minNS
+  // breakHigh = median * 1.4, breakLow = median * 0.6  (중앙값 근처 숨김)
+  var breakHigh = median * 1.5;
+  var breakLow  = median * 0.5;
+  var useBreak  = (maxNS - minNS) > median * 2 && n > 3;
+
+  var W = el.offsetWidth || 700;
+  var barW = Math.max(Math.min(Math.floor((W - 80) / n) - 8, 52), 16);
+  var totalW = n * (barW + 8) + 80;
+  var svgW = Math.max(W, totalW);
+
+  var ML = 52, MR = 16, MT = 20, MB = 60;
+  var plotW = svgW - ML - MR;
+  var groupW = plotW / n;
+
+  // 상단/하단 픽셀 높이
+  var topH = useBreak ? 160 : 280;
+  var botH = useBreak ? 80  : 0;
+  var breakH = useBreak ? 20 : 0;
+  var totalH = MT + topH + breakH + botH + MB;
+
+  // 값 → y 좌표 변환
+  function valToY(v) {
+    if(!useBreak) {
+      return MT + topH - (v / maxNS) * topH;
+    }
+    if(v >= breakHigh) {
+      // 상단 영역
+      return MT + topH - ((v - breakHigh) / (maxNS - breakHigh)) * topH;
+    } else {
+      // 하단 영역
+      var ratio = Math.max(0, (v - minNS) / Math.max(breakLow - minNS, 1));
+      return MT + topH + breakH + botH - ratio * botH;
+    }
+  }
+
+  // Y축 눈금
+  function yTicks() {
+    var ticks = [];
+    if(!useBreak) {
+      for(var i=0;i<=4;i++) ticks.push({v: maxNS*i/4, y: MT + topH - (maxNS*i/4/maxNS)*topH});
+    } else {
+      // 상단 눈금
+      ticks.push({v: maxNS,    y: MT});
+      ticks.push({v: breakHigh,y: MT + topH});
+      // 하단 눈금
+      ticks.push({v: breakLow, y: MT + topH + breakH});
+      ticks.push({v: minNS,    y: MT + topH + breakH + botH});
+    }
+    return ticks;
+  }
+
+  // 물결선 path
+  function wavePath(y) {
+    var d = `M ${ML} ${y}`;
+    var seg = 10;
+    for(var x=ML; x<svgW-MR; x+=seg) {
+      d += ` Q ${x+seg/2} ${y + (Math.floor((x-ML)/seg)%2===0?-5:5)}, ${x+seg} ${y}`;
+    }
+    return d;
+  }
+
+  var svg = `<svg width="${svgW}" height="${totalH}" style="overflow:visible;font-family:'Noto Sans KR',sans-serif">`;
+
+  // 배경 그리드
+  yTicks().forEach(t => {
+    svg += `<line x1="${ML}" y1="${t.y}" x2="${svgW-MR}" y2="${t.y}" stroke="#f3f4f6" stroke-width="1"/>`;
+    svg += `<text x="${ML-6}" y="${t.y+4}" text-anchor="end" font-size="10" fill="#9ca3af">${fmtS(t.v)}</text>`;
+  });
+
+  // 물결 영역 (break zone)
+  if(useBreak) {
+    var wy = MT + topH;
+    // 흰색으로 가리기
+    svg += `<rect x="${ML}" y="${wy}" width="${svgW-ML-MR}" height="${breakH}" fill="#f8fafc"/>`;
+    // 물결선 2개
+    svg += `<path d="${wavePath(wy+4)}" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>`;
+    svg += `<path d="${wavePath(wy+12)}" fill="none" stroke="#cbd5e1" stroke-width="1.5"/>`;
+    svg += `<text x="${svgW-MR-4}" y="${wy+10}" text-anchor="end" font-size="9" fill="#94a3b8">중앙값 구간 생략</text>`;
+  }
+
+  // 막대
+  rows.forEach((d, i) => {
+    var cx = ML + i * groupW + groupW/2;
+    var bw = barW;
+    var fullName = d.name.replace(/'/g,"\'").replace(/`/g,'\`');
+    var cNS = d.ns < 0 ? '#fca5a5' : '#3b82f6';
+    var cGP = d.gp < 0 ? '#fb923c' : '#8b5cf6';
+
+    var yNS = valToY(Math.max(d.ns,0));
+    var yGP = valToY(Math.max(d.gp,0));
+    var baseY = valToY(0) || (MT + topH + breakH + botH);
+
+    var nsH = Math.max(baseY - yNS, 2);
+    var gpH = Math.max(baseY - yGP, 2);
+
+    var click = clickable ? `onclick="drillDown('${fullName}')" style="cursor:pointer"` : '';
+    var tip = `onmouseenter="showTip(event,'${fullName}',${d.ns},${d.gp},${d.gm})" onmousemove="moveTip(event)" onmouseleave="hideTip()"`;
+
+    // NS 막대
+    svg += `<rect ${click} ${tip} x="${cx - bw/2 - 1}" y="${yNS}" width="${bw/2}" height="${nsH}" fill="${cNS}" rx="3"/>`;
+    // GP 막대
+    svg += `<rect ${click} ${tip} x="${cx + 1}" y="${yGP}" width="${bw/2}" height="${gpH}" fill="${cGP}" rx="3"/>`;
+
+    // X축 라벨
+    var nm = d.name.length > 8 ? d.name.slice(0,8)+'…' : d.name;
+    var labelY = MT + topH + breakH + botH + 14;
+    svg += `<text x="${cx}" y="${labelY}" text-anchor="middle" font-size="10" fill="#374151"
+      transform="rotate(-30,${cx},${labelY})">${nm}</text>`;
+
+    // 최대/최소 표시
+    if(d.ns === maxNS) svg += `<text x="${cx}" y="${yNS-6}" text-anchor="middle" font-size="9" fill="#1d4ed8" font-weight="700">▲최대</text>`;
+    if(d.ns === minNS && n > 1) svg += `<text x="${cx}" y="${valToY(minNS)-6}" text-anchor="middle" font-size="9" fill="#dc2626" font-weight="700">▼최소</text>`;
+  });
+
+  // X축 선
+  svg += `<line x1="${ML}" y1="${MT+topH+breakH+botH}" x2="${svgW-MR}" y2="${MT+topH+breakH+botH}" stroke="#e5e7eb" stroke-width="1"/>`;
+
+  svg += '</svg>';
+  el.style.overflowX = 'auto';
+  el.innerHTML = svg;
+}
+
+function render(){
+  var rows = chartRows();
+  var tot = agg(filtered());
+
+  // 빵부스러기
+  var bcHtml = '';
+  if(selDept!=='전체'){
+    bcHtml += `<span class="bc-item" onclick="selDept='전체';selTeam='전체';selCourse='전체';buildDept();buildTeam();buildCourse();render()">전체</span><span class="bc-sep">›</span>`;
+    bcHtml += `<span ${selTeam!=='전체'?`class="bc-item" onclick="selTeam='전체';selCourse='전체';document.getElementById('teamSel').value='전체';buildCourse();render()"`:''} style="color:#2563eb;font-weight:600">${selDept}</span>`;
+    if(selTeam!=='전체'){
+      bcHtml += `<span class="bc-sep">›</span>`;
+      bcHtml += `<span ${selCourse!=='전체'?`class="bc-item" onclick="selCourse='전체';document.getElementById('courseSel').value='전체';render()"`:''} style="color:#7c3aed;font-weight:600">${selTeam}</span>`;
+      if(selCourse!=='전체'){
+        bcHtml += `<span class="bc-sep">›</span><span style="color:#0891b2;font-weight:600">${selCourse}</span>`;
+      }
+    }
+  }
+  document.getElementById('bc').innerHTML = bcHtml;
+
+  // 뒤로가기
+  document.getElementById('backBtn').style.display = selDept==='전체'?'none':'flex';
+
+  // KPI 3개 카드
+  var totalAll = agg(G_RAW);
+  var kpiData = [
+    {label:'Net-Sales', sub:'실제 매출', val:fmtN(tot.ns)+'원', bg:'#eff6ff', border:'#bfdbfe', color:'#1d4ed8'},
+    {label:'Gross Profit', sub:'매출총이익', val:fmtN(tot.gp)+'원', bg:'#f0fdf4', border:'#bbf7d0', color:'#15803d'},
+    {label:'Gross Margin', sub:'원가 제외 이익율', val:fmtP(tot.gm), bg:'#ecfdf5', border:'#a7f3d0', color:tot.gm>=0.3?'#16a34a':tot.gm>=0?'#d97706':'#dc2626'},
+  ];
+  document.getElementById('kpiCards').innerHTML = kpiData.map(k=>`
+    <div class="kpi-card" style="background:${k.bg};border-color:${k.border}">
+      <div class="kpi-card-lbl" style="color:${k.color}">${k.label} <span style="font-size:11px;font-weight:500;color:#6b7280">(${k.sub})</span></div>
+      <div class="kpi-card-val" style="color:${k.color}">${k.val}</div>
+    </div>`).join('');
+
+  // 사이드 KPI (GM)
+  var kc = tot.gm>=0.3?'#16a34a':tot.gm>=0?'#d97706':'#dc2626';
+  document.getElementById('kpiLbl').textContent = 'Gross Margin';
+  document.getElementById('kpiVal').textContent = fmtP(tot.gm);
+  document.getElementById('kpiVal').style.color = kc;
+  document.getElementById('kpiBadge').textContent = tot.gm>=0?'▲ 흑자':'▼ 적자';
+  document.getElementById('kpiBadge').style.color = kc;
+  document.getElementById('kpiBadge').style.background = kc+'22';
+  document.getElementById('kpiBox').style.borderColor = kc+'35';
+  document.getElementById('kpiBox').style.background = kc+'08';
+
+  // 요약카드 (건수)
+  var cnt = rows.length;
+  var level = selDept==='전체'?'영업부':selTeam==='전체'?'영업팀':selCourse==='전체'?'처방코스':'간납처';
+  document.getElementById('sumCards').innerHTML = `
+    <div class="sum-card" style="background:#fff7ed;border-color:#fed7aa">
+      <div class="sn" style="color:#ea580c">${level} 수</div>
+      <div class="sv" style="color:#c2410c;font-size:26px">${cnt}</div>
+      <div class="ss">개</div>
+    </div>`;
+
+  // 차트 제목
+  var ctMap = {
+    '전체전체전체': '영업부별 매출 현황 — 클릭 시 팀별로 이동',
+    '전체': `${selDept} — 영업팀별 매출 현황 — 클릭 시 코스별로 이동`,
+  };
+  var ct;
+  if(selDept==='전체') ct='영업부별 매출 현황 — 막대 클릭 시 팀별로 이동';
+  else if(selTeam==='전체') ct=`[${selDept}] 팀별 매출 현황 — 막대 클릭 시 코스별로 이동`;
+  else if(selCourse==='전체') ct=`[${selDept} > ${selTeam}] 코스별 매출 현황 — 막대 클릭 시 간납처별로 이동`;
+  else ct=`[${selDept} > ${selTeam} > ${selCourse}] 간납처별 매출 현황`;
+  document.getElementById('ctitle').textContent = ct;
+
+  drawChart(rows);
+  // 첫 화면(전체)은 범례 숨김
+  var _lg=document.querySelector('#ganap-wrap .legend'); if(_lg) _lg.style.display = selDept==='전체' ? 'none' : 'flex';
+}
+
+
+
+  // APP에 간납 함수 등록
+  APP.buildDept = buildDept;
+  APP.buildTeam = buildTeam;
+  APP.buildCourse = buildCourse;
+  APP.render = render;
+
+  // onclick에서 호출되는 전역 함수들을 window에 등록
+  window.goBack = goBack;
+  window.drillDown = drillDown;
+  window.onDept = onDept;
+  window.onTeam = onTeam;
+  window.onCourse = onCourse;
+  window.showTip = showTip;
+  window.moveTip = moveTip;
+  window.hideTip = hideTip;
+  window.resetAll = function(){ selDept='전체'; selTeam='전체'; selCourse='전체'; buildDept(); buildTeam(); buildCourse(); render(); };
+  window.resetTeam = function(){ selTeam='전체'; selCourse='전체'; document.getElementById('teamSel').value='전체'; buildCourse(); render(); };
+  window.resetCourse = function(){ selCourse='전체'; document.getElementById('courseSel').value='전체'; render(); };
+
+})(window.APP);
+</script>
+</body>
+</html>
