@@ -94,15 +94,16 @@ body{font-family:var(--sans);background:#F2F2F7;color:var(--dark);min-height:100
 
 /* CAT CARDS */
 .cat-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
-.cat-card{background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.cat-card{background:#fff;border-radius:12px;padding:14px;border:1px solid var(--border);}
 .cat-left{flex:1;min-width:0;}
 .cat-name{font-size:12px;font-weight:700;color:var(--g700);margin-bottom:4px;}
-.cat-amount{font-size:14px;font-weight:800;font-family:var(--mono);color:var(--dark);}
+.cat-amount{font-size:15px;font-weight:800;font-family:var(--mono);color:var(--dark);}
 .cat-unit{font-size:11px;font-weight:400;color:var(--g500);margin-left:2px;}
 .cat-goal{font-size:10px;color:var(--g500);font-family:var(--mono);margin-top:2px;}
-.cat-bar{height:4px;background:var(--g300);border-radius:2px;margin-top:8px;overflow:hidden;}
+.cat-bar-wrap{margin-top:8px;}
+.cat-pct-inline{font-size:15px;font-weight:800;font-family:var(--mono);margin-bottom:4px;}
+.cat-bar{height:4px;background:var(--g300);border-radius:2px;overflow:hidden;}
 .cat-bar-fill{height:100%;border-radius:2px;}
-.cat-pct-big{font-size:26px;font-weight:900;font-family:var(--mono);flex-shrink:0;line-height:1;}
 .pct-over{color:#16a34a;}
 .pct-under{color:var(--red);}
 
@@ -210,40 +211,40 @@ body{font-family:var(--sans);background:#F2F2F7;color:var(--dark);min-height:100
   <div class="section-label"><h2>품목군별 매출</h2></div>
   <div class="cat-list fade-up">
     <div class="cat-card">
-      <div class="cat-left">
-        <div class="cat-name">일반품목</div>
-        <div class="cat-amount">4,636,283,798<span class="cat-unit">원</span></div>
-        <div class="cat-goal">목표 5,013,882,633원</div>
+      <div class="cat-name">일반품목</div>
+      <div class="cat-amount">4,636,283,798<span class="cat-unit">원</span></div>
+      <div class="cat-goal">목표 5,013,882,633원</div>
+      <div class="cat-bar-wrap">
+        <div class="cat-pct-inline" style="color:var(--red);">92.5%</div>
         <div class="cat-bar"><div class="cat-bar-fill" style="width:92.5%;background:var(--red);"></div></div>
       </div>
-      <div class="cat-pct-big" style="color:var(--red);">92.5%</div>
     </div>
     <div class="cat-card">
-      <div class="cat-left">
-        <div class="cat-name">TKD</div>
-        <div class="cat-amount">1,633,656,641<span class="cat-unit">원</span></div>
-        <div class="cat-goal">목표 1,999,610,816원</div>
+      <div class="cat-name">TKD</div>
+      <div class="cat-amount">1,633,656,641<span class="cat-unit">원</span></div>
+      <div class="cat-goal">목표 1,999,610,816원</div>
+      <div class="cat-bar-wrap">
+        <div class="cat-pct-inline" style="color:var(--red);">81.7%</div>
         <div class="cat-bar"><div class="cat-bar-fill" style="width:81.7%;background:var(--red);"></div></div>
       </div>
-      <div class="cat-pct-big" style="color:var(--red);">81.7%</div>
     </div>
     <div class="cat-card">
-      <div class="cat-left">
-        <div class="cat-name">디엠류</div>
-        <div class="cat-amount">360,696,535<span class="cat-unit">원</span></div>
-        <div class="cat-goal">목표 460,052,779원</div>
+      <div class="cat-name">디엠류</div>
+      <div class="cat-amount">360,696,535<span class="cat-unit">원</span></div>
+      <div class="cat-goal">목표 460,052,779원</div>
+      <div class="cat-bar-wrap">
+        <div class="cat-pct-inline" style="color:var(--red);">78.4%</div>
         <div class="cat-bar"><div class="cat-bar-fill" style="width:78.4%;background:var(--red);"></div></div>
       </div>
-      <div class="cat-pct-big" style="color:var(--red);">78.4%</div>
     </div>
     <div class="cat-card">
-      <div class="cat-left">
-        <div class="cat-name">에크락겔</div>
-        <div class="cat-amount">60,090,800<span class="cat-unit">원</span></div>
-        <div class="cat-goal">목표 230,820,000원</div>
+      <div class="cat-name">에크락겔</div>
+      <div class="cat-amount">60,090,800<span class="cat-unit">원</span></div>
+      <div class="cat-goal">목표 230,820,000원</div>
+      <div class="cat-bar-wrap">
+        <div class="cat-pct-inline" style="color:var(--red);">26.0%</div>
         <div class="cat-bar"><div class="cat-bar-fill" style="width:26.0%;background:var(--red);"></div></div>
       </div>
-      <div class="cat-pct-big" style="color:var(--red);">26.0%</div>
     </div>
   </div>
 
