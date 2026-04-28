@@ -7,28 +7,36 @@
 <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{
-  --red:#C8102E;--red-light:#E8354F;--red-pale:#FFF0F3;--red-muted:#F5C6CE;
-  --dark:#1A1A1A;--g700:#3A3A3A;--g500:#6A6A6A;--g300:#C8C8C8;
-  --g100:#F5F5F5;--white:#fff;--border:#E4E4E4;
+:root {
+  --red:#C8102E; --red-light:#E8354F; --red-pale:#FFF0F3; --red-muted:#F5C6CE;
+  --dark:#1A1A1A; --g700:#3A3A3A; --g500:#6A6A6A; --g300:#C8C8C8;
+  --g100:#F5F5F5; --white:#fff; --border:#E4E4E4;
   --mono:'IBM Plex Mono',monospace;
   --sans:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:var(--sans);background:var(--white);color:var(--dark);min-height:100vh;font-size:15px;}
+
+/* HEADER */
 .header{background:#fff;border-bottom:3px solid var(--red);padding:0 48px;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,0.07);}
 .header-inner{max-width:1440px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:76px;}
 .logo-area{display:flex;align-items:center;gap:18px;}
-.logo-area img{height:44px;object-fit:contain;}
+.logo-area img{height:44px;object-fit:contain;display:block;}
 .hdr-divider{width:1px;height:34px;background:var(--g300);}
 .page-title{font-size:17px;font-weight:700;color:var(--g700);letter-spacing:-0.3px;}
 .header-meta{display:flex;align-items:center;gap:14px;}
 .update-text{font-size:14px;color:var(--g500);font-weight:500;}
 .date-badge{background:var(--red);color:#fff;font-size:13px;font-weight:600;padding:6px 18px;border-radius:24px;font-family:var(--mono);letter-spacing:0.5px;}
+
+/* MAIN */
 .main{max-width:1440px;margin:0 auto;padding:36px 48px 72px;}
+
+/* SECTION LABEL */
 .section-label{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
 .section-label::before{content:'';width:4px;height:22px;background:var(--red);border-radius:2px;}
 .section-label h2{font-size:15px;font-weight:800;color:var(--g700);letter-spacing:0.3px;text-transform:uppercase;}
+
+/* GOAL CARD */
 .goal-section{margin-bottom:32px;}
 .goal-card{background:var(--dark);border-radius:18px;padding:36px 48px;display:flex;align-items:center;justify-content:space-between;overflow:hidden;position:relative;}
 .goal-card::after{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(200,16,46,0.14);pointer-events:none;}
@@ -43,6 +51,8 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 .goal-stat-label{font-size:12px;color:rgba(255,255,255,0.45);font-weight:600;letter-spacing:0.5px;margin-bottom:8px;}
 .goal-stat-value{font-size:26px;font-weight:800;color:#fff;font-family:var(--mono);}
 .goal-stat-value.hl{color:var(--red-light);}
+
+/* PROGRESS */
 .progress-section{margin-bottom:32px;}
 .progress-wrap{background:var(--g100);border-radius:14px;padding:26px 32px;border:1px solid var(--border);}
 .progress-header{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px;}
@@ -50,10 +60,12 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 .progress-sub{font-size:13px;color:var(--g500);margin-top:4px;font-family:var(--mono);}
 .progress-pct{font-size:34px;font-weight:900;font-family:var(--mono);color:var(--red);}
 .bar-track{height:14px;background:var(--g300);border-radius:7px;overflow:hidden;}
-.bar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--red-light));border-radius:7px;position:relative;}
+.bar-fill{height:100%;background:linear-gradient(90deg,#16a34a,#22c55e);border-radius:7px;position:relative;}
 .bar-fill::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:4px;height:22px;background:#fff;border-radius:2px;opacity:0.6;}
 .progress-meta{display:flex;justify-content:space-between;margin-top:12px;}
 .progress-meta span{font-size:12px;color:var(--g500);font-family:var(--mono);}
+
+/* SUMMARY CARD */
 .summary-card{border:2px solid var(--red);border-radius:16px;padding:28px 36px;background:var(--red-pale);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;margin-bottom:16px;position:relative;overflow:hidden;}
 .summary-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--red);}
 .summary-main .stag{font-size:12px;font-weight:700;color:var(--red);letter-spacing:0.5px;text-transform:uppercase;margin-bottom:6px;}
@@ -63,6 +75,8 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 .split-item .split-label{font-size:12px;font-weight:700;color:var(--red);margin-bottom:5px;}
 .split-item .split-val{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--dark);}
 .split-item .split-sub{font-size:11px;color:var(--g500);margin-top:2px;}
+
+/* DEPT CARDS */
 .dept-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:36px;}
 .dept-card{border:1px solid var(--border);border-radius:14px;padding:24px;background:#fff;transition:box-shadow 0.2s,transform 0.2s;}
 .dept-card:hover{box-shadow:0 8px 28px rgba(0,0,0,0.09);transform:translateY(-2px);}
@@ -73,8 +87,18 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 .dept-card:not(.dm) .dtag .dot{background:var(--red);}
 .dname{font-size:15px;font-weight:700;color:var(--g700);margin-bottom:10px;}
 .damount{font-size:22px;font-weight:900;font-family:var(--mono);color:var(--dark);letter-spacing:-0.5px;}
+.dept-card:not(.dm) .damount{color:var(--dark);}
 .dunit{font-size:13px;font-weight:400;color:var(--g500);margin-left:3px;}
 .dsub{font-size:12px;color:var(--g500);margin-top:6px;}
+.ddepts{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:7px;}
+.drow{display:flex;justify-content:space-between;align-items:center;}
+.drow-name{font-size:12px;color:var(--g500);}
+.drow-amt{font-size:12px;font-family:var(--mono);color:var(--g700);font-weight:600;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:36px;}
+
+/* TABLE CARD */
 .table-card{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:#fff;}
 .table-header{background:var(--g100);padding:18px 22px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);}
 .table-header-title{font-size:14px;font-weight:800;color:var(--g700);}
@@ -89,8 +113,11 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 .rank-badge{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;font-family:var(--mono);background:var(--g100);color:var(--g500);margin-right:8px;}
 .rank-badge.top{background:var(--red);color:#fff;}
 .amount-cell{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--g700);}
+.mini-bar-wrap{display:flex;align-items:center;gap:10px;justify-content:flex-end;}
 .mini-bar{width:70px;height:5px;background:var(--g300);border-radius:3px;overflow:hidden;}
-.mini-bar-fill{height:100%;background:var(--red);border-radius:3px;}
+.mini-bar-fill{height:100%;background:var(--red);border-radius:3px;opacity:0.75;}
+
+/* CAT GRID */
 .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px;}
 .cat-card{background:var(--g100);border-radius:12px;padding:20px;display:flex;align-items:flex-end;gap:16px;}
 .cat-left{flex:1;min-width:0;}
@@ -102,6 +129,8 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 .cat-bar{height:5px;background:var(--g300);border-radius:3px;overflow:hidden;}
 .cat-bar-fill{height:100%;border-radius:3px;}
 .cat-pct-inline{font-size:20px;font-weight:800;font-family:var(--mono);flex-shrink:0;line-height:1;padding-bottom:8px;}
+
+/* BRAND SECTION */
 .brand-section{margin-bottom:36px;}
 .show-more-btn{display:block;width:100%;padding:14px;background:none;border:1px dashed var(--g300);border-top:none;font-size:13px;color:var(--g500);cursor:pointer;font-family:var(--sans);font-weight:600;transition:background 0.15s;}
 .show-more-btn:hover{background:var(--g100);color:var(--red);}
@@ -110,16 +139,28 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 .bar-cell .mini-bar{width:60px;}
 .pct-over{color:#16a34a;}
 .pct-under{color:var(--red);}
+
+/* FOOTER */
 .footer{border-top:1px solid var(--border);padding:22px 48px;text-align:center;font-size:12px;color:var(--g500);}
+
+/* ANIMATIONS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp 0.5s ease both;}
-@media(max-width:1100px){.dept-grid{grid-template-columns:repeat(2,1fr);}}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .dept-grid{grid-template-columns:repeat(2,1fr);}
+  .two-col{grid-template-columns:1fr;}
+}
 @media(max-width:720px){
-  .main{padding:20px;}.header{padding:0 20px;}
+  .main{padding:20px;}
+  .header{padding:0 20px;}
   .goal-card{flex-direction:column;gap:24px;padding:24px;}
-  .goal-amount{font-size:30px;}.goal-stats{justify-content:center;gap:28px;}
+  .goal-amount{font-size:30px;}
+  .goal-stats{justify-content:center;gap:28px;}
   .dept-grid{grid-template-columns:1fr;}
-  .summary-card{flex-direction:column;}.summary-splits{flex-direction:column;gap:16px;}
+  .summary-card{flex-direction:column;}
+  .summary-splits{flex-direction:column;gap:16px;}
   .footer{padding:16px 20px;}
 }
 </style>
@@ -142,70 +183,92 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 
 <main class="main">
 
-  <!-- 수금 현황 -->
+  <!-- 목표 현황 -->
   <div class="goal-section">
-    <div class="section-label"><h2>4월 수금 현황</h2></div>
+    <div class="section-label"><h2>4월 목표 현황</h2></div>
     <div class="goal-card fade-up">
       <div class="goal-left">
-        <div class="goal-label">4월 수금 목표</div>
-        <div class="goal-amount">358.8<span>억원</span></div>
-        <div class="goal-sublabel">35,878,364,049원</div>
+        <div class="goal-label">4월 ETC부문 목표 매출</div>
+        <div class="goal-amount">7,704<span>백만원</span></div>
+        <div class="goal-sublabel">7,704백만원</div>
       </div>
       <div class="goal-stats">
         <div class="goal-stat">
-          <div class="goal-stat-label">수금누계 (백만원)</div>
-          <div class="goal-stat-value hl">17,132.1</div>
+          <div class="goal-stat-label">MTD 실적 (백만원)</div>
+          <div class="goal-stat-value hl">7,739.8</div>
         </div>
         <div class="goal-stat">
           <div class="goal-stat-label">달성률</div>
-          <div class="goal-stat-value hl">47.8%</div>
+          <div class="goal-stat-value hl">100.5%</div>
         </div>
         <div class="goal-stat">
-          <div class="goal-stat-label">잔여 (백만원)</div>
-          <div class="goal-stat-value">18,746.3</div>
+          <div class="goal-stat-label">잔여 목표 (백만원)</div>
+          <div class="goal-stat-value">+35.5</div>
         </div>
+      </div>
       </div>
     </div>
   </div>
 
-  <!-- 수금 달성률 바 -->
+  <!-- 달성률 바 -->
   <div class="progress-section fade-up">
     <div class="progress-wrap">
       <div class="progress-header">
         <div>
-          <div class="progress-title">수금 달성률 진행 현황</div>
-          <div class="progress-sub">4월 28일 기준 / 수금목표: 35,878백만원</div>
+          <div class="progress-title">목표 달성률 진행 현황</div>
+          <div class="progress-sub">4월 28일 기준 / 목표: 7,704백만원</div>
         </div>
-        <div class="progress-pct">47.8%</div>
+        <div class="progress-pct">100.5%</div>
       </div>
-      <div class="bar-track"><div class="bar-fill" style="width:47.8%"></div></div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
       <div class="progress-meta">
-        <span>달성: 17,132.1백만원</span>
-        <span style="color:var(--red);font-weight:600;">잔여: 18,746.3백만원</span>
-        <span>목표: 35,878.4백만원</span>
+        <span>달성: 7,739.8백만원</span>
+        <span style="color:var(--red);font-weight:600;">초과: 35.5백만원</span>
+        <span>목표: 7,704백만원</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 마감예상 달성률 -->
+  <div class="progress-section fade-up">
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <div>
+          <div class="progress-title">4월 마감예상 달성률</div>
+          <div class="progress-sub">마감예상 달성률: 100.4% &nbsp;|&nbsp; 마감예상: 7,733백만원</div>
+        </div>
+        <div class="progress-pct" style="color:#16a34a;">100%+</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#16a34a,#22c55e);"></div>
+      </div>
+      <div class="progress-meta">
+        <span>현재 실적: 7,739.8백만원</span>
+        <span style="color:#16a34a;font-weight:600;">초과: 6.8백만원</span>
+        <span>마감예상: 7,733백만원</span>
       </div>
     </div>
   </div>
 
   <!-- 영업부별 MTD 매출 -->
-  <div class="section-label"><h2>영업부별 MTD 매출 (판매누계)</h2></div>
+  <div class="section-label"><h2>영업부별 MTD 매출</h2></div>
 
   <div class="summary-card fade-up">
     <div class="summary-main">
-      <div class="stag">전부문 판매누계 합계</div>
-      <div class="samount">8,094.4<span style="font-size:16px;font-weight:500;color:var(--g500);margin-left:4px;">백만원</span></div>
-      <div class="ssub">주문합계(미출하+미확인): 70.0백만원</div>
+      <div class="stag">ETC부문 합계</div>
+      <div class="samount">7,739.8<span style="font-size:16px;font-weight:500;color:var(--g500);margin-left:4px;">백만원</span></div>
+      <div class="ssub">약 7,739.8백만원 (73.8억)</div>
     </div>
     <div class="summary-splits">
       <div class="split-item">
-        <div class="split-label">미출하 주문금액</div>
-        <div class="split-val">38.4<span style="font-size:13px;font-weight:400;color:var(--g500);margin-left:3px;">백만원</span></div>
-        <div class="split-sub">출하 대기 주문</div>
+        <div class="split-label">ETC 영업부별 매출</div>
+        <div class="split-val">2,809.5<span style="font-size:13px;font-weight:400;color:var(--g500);margin-left:3px;">백만원</span></div>
+        <div class="split-sub">약 2,809.5백만원 (28.1억)</div>
       </div>
       <div class="split-item">
-        <div class="split-label">미확인 주문금액</div>
-        <div class="split-val">31.6<span style="font-size:13px;font-weight:400;color:var(--g500);margin-left:3px;">백만원</span></div>
-        <div class="split-sub">확인 대기 주문</div>
+        <div class="split-label">도매 매출</div>
+        <div class="split-val">4,284.1<span style="font-size:13px;font-weight:400;color:var(--g500);margin-left:3px;">백만원</span></div>
+        <div class="split-sub">약 4,284.1백만원 (42.8억)</div>
       </div>
     </div>
   </div>
@@ -214,75 +277,31 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
     <div class="dept-card">
       <div class="dtag"><span class="dot"></span>ETC 영업</div>
       <div class="dname">종병영업부</div>
-      <div class="damount">1,433.8<span class="dunit">백만원</span></div>
-      <div class="dsub">미출하 1.6백만 / 미확인 5.7백만</div>
+      <div class="damount">1,384.5<span class="dunit">백만원</span></div>
+      <div class="dsub">1,384.5백만원</div>
     </div>
     <div class="dept-card">
       <div class="dtag"><span class="dot"></span>ETC 영업</div>
       <div class="dname">병의원영업1부</div>
-      <div class="damount">978.2<span class="dunit">백만원</span></div>
-      <div class="dsub">미출하 8.1백만 / 미확인 1.9백만</div>
+      <div class="damount">875.3<span class="dunit">백만원</span></div>
+      <div class="dsub">875.3백만원</div>
     </div>
     <div class="dept-card">
       <div class="dtag"><span class="dot"></span>ETC 영업</div>
       <div class="dname">병의원영업2부</div>
-      <div class="damount">631.5<span class="dunit">백만원</span></div>
-      <div class="dsub">미출하 3.5백만 / 미확인 2.1백만</div>
-    </div>
-    <div class="dept-card">
-      <div class="dtag"><span class="dot"></span>DM</div>
-      <div class="dname">의원DM부</div>
-      <div class="damount">4,682.4<span class="dunit">백만원</span></div>
-      <div class="dsub">미출하 25.2백만 / 미확인 21.9백만</div>
+      <div class="damount">549.8<span class="dunit">백만원</span></div>
+      <div class="dsub">549.8백만원</div>
     </div>
     <div class="dept-card dm">
-      <div class="dtag"><span class="dot"></span>DM</div>
-      <div class="dname">종병DM부</div>
-      <div class="damount">13.8<span class="dunit">백만원</span></div>
-      <div class="dsub">목표달성률: 0.24% (목표 3,339백만)</div>
-    </div>
-    <div class="dept-card dm">
-      <div class="dtag"><span class="dot"></span>개발</div>
-      <div class="dname">개발부문</div>
-      <div class="damount">331.2<span class="dunit">백만원</span></div>
-      <div class="dsub">목표달성률: 63.77% (목표 519백만)</div>
-    </div>
-    <div class="dept-card dm">
-      <div class="dtag"><span class="dot"></span>기타</div>
-      <div class="dname">Global/기타</div>
-      <div class="damount">23.4<span class="dunit">백만원</span></div>
-      <div class="dsub">Global 17.2 + 기타 4.8 + 영업기타 1.4</div>
+      <div class="dtag"><span class="dot"></span>도매</div>
+      <div class="dname">도매부</div>
+      <div class="damount">4,284.1<span class="dunit">백만원</span></div>
+      <div class="dsub">4,284.1백만원</div>
+
     </div>
   </div>
 
-  <!-- 수금 부문별 -->
-  <div class="section-label"><h2>부문별 수금 현황</h2></div>
-  <div style="margin-bottom:36px;">
-    <div class="table-card">
-      <div class="table-header">
-        <span class="table-header-title">영업부별 수금 목표 vs 누계</span>
-        <span class="table-badge">기준: 2026.04.28</span>
-      </div>
-      <table class="data-table">
-        <thead><tr><th>영업부</th><th>수금목표</th><th>수금누계</th><th>달성률</th></tr></thead>
-        <tbody>
-          <tr><td><span class="brand-name">약국영업1부</span></td><td class="amount-cell">3,964.6백만</td><td class="amount-cell">3,176.3백만</td><td><span class="pct-cell pct-under">80.1%</span></td></tr>
-          <tr><td><span class="brand-name">약국영업2부</span></td><td class="amount-cell">3,421.8백만</td><td class="amount-cell">3,223.2백만</td><td><span class="pct-cell pct-under">94.2%</span></td></tr>
-          <tr><td><span class="brand-name">약국영업3부</span></td><td class="amount-cell">3,083.3백만</td><td class="amount-cell">2,703.7백만</td><td><span class="pct-cell pct-under">87.7%</span></td></tr>
-          <tr><td><span class="brand-name">도매부</span></td><td class="amount-cell">12,074.5백만</td><td class="amount-cell">1,518.9백만</td><td><span class="pct-cell pct-under">12.6%</span></td></tr>
-          <tr><td><span class="brand-name">종병영업부</span></td><td class="amount-cell">1,260.0백만</td><td class="amount-cell">298.0백만</td><td><span class="pct-cell pct-under">23.7%</span></td></tr>
-          <tr><td><span class="brand-name">병의원영업1부</span></td><td class="amount-cell">493.3백만</td><td class="amount-cell">450.7백만</td><td><span class="pct-cell pct-under">91.4%</span></td></tr>
-          <tr><td><span class="brand-name">병의원영업2부</span></td><td class="amount-cell">265.0백만</td><td class="amount-cell">304.2백만</td><td><span class="pct-cell pct-over">114.8%</span></td></tr>
-          <tr><td><span class="brand-name">생건(뷰티)</span></td><td class="amount-cell">476.2백만</td><td class="amount-cell">89.2백만</td><td><span class="pct-cell pct-under">18.7%</span></td></tr>
-          <tr><td><span class="brand-name">생건(헬스케어)</span></td><td class="amount-cell">7,995.9백만</td><td class="amount-cell">3,005.8백만</td><td><span class="pct-cell pct-under">37.6%</span></td></tr>
-          <tr><td><span class="brand-name">개발부문</span></td><td class="amount-cell">1,939.3백만</td><td class="amount-cell">1,344.1백만</td><td><span class="pct-cell pct-under">69.3%</span></td></tr>
-          <tr><td><span class="brand-name">Global</span></td><td class="amount-cell">904.5백만</td><td class="amount-cell">444.5백만</td><td><span class="pct-cell pct-under">49.1%</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- 품목군 -->
+  <!-- 품목군 (전체 너비) -->
   <div class="section-label"><h2>품목군별 매출</h2></div>
   <div style="margin-bottom:36px;">
     <div class="table-card">
@@ -291,42 +310,42 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
         <span class="table-badge">총 4개 품목군</span>
       </div>
       <div class="cat-grid">
-        <div class="cat-card">
-          <div class="cat-left">
-            <div class="cat-name">일반품목</div>
-            <div class="cat-amount">5,431<span class="cat-unit">백만원</span></div>
-            <div class="cat-goal">목표 5,014백만원</div>
-            <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:100%;background:#16a34a;"></div></div></div>
+          <div class="cat-card">
+            <div class="cat-left">
+              <div class="cat-name">일반품목</div>
+              <div class="cat-amount">5,369<span class="cat-unit">백만원</span></div>
+              <div class="cat-goal">목표 5,014백만원</div>
+              <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:100%;background:#16a34a;;"></div></div></div>
+            </div>
+            <span class="cat-pct-inline" style="color:var(--red);">107.1%</span>
           </div>
-          <span class="cat-pct-inline" style="color:#16a34a;">108.3%</span>
-        </div>
-        <div class="cat-card">
-          <div class="cat-left">
-            <div class="cat-name">TKD</div>
-            <div class="cat-amount">1,888<span class="cat-unit">백만원</span></div>
-            <div class="cat-goal">목표 1,999.6백만원</div>
-            <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:94.4%;background:var(--red);"></div></div></div>
+          <div class="cat-card">
+            <div class="cat-left">
+              <div class="cat-name">TKD</div>
+              <div class="cat-amount">1,888<span class="cat-unit">백만원</span></div>
+              <div class="cat-goal">목표 2,000백만원</div>
+              <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:94.4%;background:var(--red);"></div></div></div>
+            </div>
+            <span class="cat-pct-inline" style="color:var(--red);">94.4%</span>
           </div>
-          <span class="cat-pct-inline" style="color:var(--red);">94.4%</span>
-        </div>
-        <div class="cat-card">
-          <div class="cat-left">
-            <div class="cat-name">디엠류</div>
-            <div class="cat-amount">412<span class="cat-unit">백만원</span></div>
-            <div class="cat-goal">목표 460.1백만원</div>
-            <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:89.5%;background:var(--red);"></div></div></div>
+          <div class="cat-card">
+            <div class="cat-left">
+              <div class="cat-name">디엠류</div>
+              <div class="cat-amount">412<span class="cat-unit">백만원</span></div>
+              <div class="cat-goal">목표 460백만원</div>
+              <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:89.5%;background:var(--red);"></div></div></div>
+            </div>
+            <span class="cat-pct-inline" style="color:var(--red);">89.5%</span>
           </div>
-          <span class="cat-pct-inline" style="color:var(--red);">89.5%</span>
-        </div>
-        <div class="cat-card">
-          <div class="cat-left">
-            <div class="cat-name">에크락겔</div>
-            <div class="cat-amount">72<span class="cat-unit">백만원</span></div>
-            <div class="cat-goal">목표 230.8백만원</div>
-            <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:31.3%;background:var(--red);"></div></div></div>
+          <div class="cat-card">
+            <div class="cat-left">
+              <div class="cat-name">에크락겔</div>
+              <div class="cat-amount">72<span class="cat-unit">백만원</span></div>
+              <div class="cat-goal">목표 231백만원</div>
+              <div class="cat-bar-wrap"><div class="cat-bar"><div class="cat-bar-fill" style="width:31.3%;background:var(--red);"></div></div></div>
+            </div>
+            <span class="cat-pct-inline" style="color:var(--red);">31.3%</span>
           </div>
-          <span class="cat-pct-inline" style="color:var(--red);">31.3%</span>
-        </div>
       </div>
     </div>
   </div>
@@ -343,7 +362,7 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
         <thead><tr><th style="width:46px">순위</th><th>브랜드</th><th>목표금액</th><th>판매누계</th><th style="width:90px">달성률</th></tr></thead>
         <tbody id="brandBody"></tbody>
       </table>
-      <button class="show-more-btn" id="showMoreBtn" onclick="toggleBrands()">▼ 전체 브랜드 보기 (82개)</button>
+      <button class="show-more-btn" id="showMoreBtn" onclick="toggleBrands()">▼ 전체 브랜드 보기 (81개)</button>
     </div>
   </div>
 
@@ -351,19 +370,102 @@ body{font-family:var(--sans);background:var(--white);color:var(--dark);min-heigh
 <footer class="footer">동화약품 ETC 일일실적리포트 · 기준일: 2026년 4월 28일 · 데이터 출처: 매출일계표 / 매출브랜드</footer>
 
 <script>
-const allBrands = [{"rank": 1, "name": "란스톤엘에프디티", "actual": 1037.6, "goal": 0.0}, {"rank": 2, "name": "덱실란트", "actual": 853.6, "goal": 0.0}, {"rank": 3, "name": "프리스틱", "actual": 517.6, "goal": 0.0}, {"rank": 4, "name": "라코르", "actual": 473.4, "goal": 83.2}, {"rank": 5, "name": "레메론", "actual": 396.5, "goal": 0.0}, {"rank": 6, "name": "인트린직MD", "actual": 320.0, "goal": 0.0}, {"rank": 7, "name": "맥페란", "actual": 281.6, "goal": 0.0}, {"rank": 8, "name": "아토스타젯", "actual": 278.0, "goal": 28.1}, {"rank": 9, "name": "라베듀엣", "actual": 210.6, "goal": 77.7}, {"rank": 10, "name": "메녹틸", "actual": 201.9, "goal": 0.0}, {"rank": 11, "name": "아토스타", "actual": 195.8, "goal": 23.3}, {"rank": 12, "name": "클로피", "actual": 183.3, "goal": 36.2}, {"rank": 13, "name": "테디엠", "actual": 175.4, "goal": 6.4}, {"rank": 14, "name": "록소닌", "actual": 164.7, "goal": 1.7}, {"rank": 15, "name": "클자핀", "actual": 145.0, "goal": 0.0}, {"rank": 16, "name": "엠코발", "actual": 138.3, "goal": 67.0}, {"rank": 17, "name": "엘텐", "actual": 114.6, "goal": 7.5}, {"rank": 18, "name": "에탈로프", "actual": 94.4, "goal": 0.0}, {"rank": 19, "name": "올자핀", "actual": 92.0, "goal": 0.0}, {"rank": 20, "name": "다플디엠", "actual": 80.3, "goal": 0.0}, {"rank": 21, "name": "레조트론", "actual": 75.3, "goal": 0.0}, {"rank": 22, "name": "다시디엠", "actual": 73.1, "goal": 0.0}, {"rank": 23, "name": "실마진", "actual": 72.6, "goal": 34.6}, {"rank": 24, "name": "에크락겔", "actual": 72.3, "goal": 0.0}, {"rank": 25, "name": "돈페질", "actual": 66.5, "goal": 0.0}, {"rank": 26, "name": "화장품", "actual": 66.0, "goal": 0.0}, {"rank": 27, "name": "파목신", "actual": 62.8, "goal": 4.6}, {"rank": 28, "name": "메만틴", "actual": 56.2, "goal": 0.0}, {"rank": 29, "name": "칼시베타", "actual": 55.8, "goal": 0.0}, {"rank": 30, "name": "동화쿠에티아핀", "actual": 54.8, "goal": 0.0}, {"rank": 31, "name": "로티브", "actual": 53.7, "goal": 6.5}, {"rank": 32, "name": "레바핀", "actual": 53.0, "goal": 0.0}, {"rank": 33, "name": "디트로판", "actual": 50.8, "goal": 0.0}, {"rank": 34, "name": "암로디핀베실산염", "actual": 48.9, "goal": 8.4}, {"rank": 35, "name": "팔렉신", "actual": 48.0, "goal": 0.0}, {"rank": 36, "name": "모사피드", "actual": 48.0, "goal": 0.0}, {"rank": 37, "name": "미보", "actual": 46.2, "goal": 0.0}, {"rank": 38, "name": "오로파트", "actual": 45.5, "goal": 0.0}, {"rank": 39, "name": "파인디핀", "actual": 44.6, "goal": 39.4}, {"rank": 40, "name": "알피움", "actual": 44.6, "goal": 0.0}, {"rank": 41, "name": "스타넵틴", "actual": 38.9, "goal": 0.0}, {"rank": 42, "name": "레보프릴", "actual": 38.9, "goal": 0.0}, {"rank": 43, "name": "암브렉트", "actual": 37.9, "goal": 0.0}, {"rank": 44, "name": "헤어페시아", "actual": 35.6, "goal": 0.0}, {"rank": 45, "name": "리나디엠", "actual": 33.2, "goal": 0.0}, {"rank": 46, "name": "설포피린", "actual": 31.3, "goal": 0.0}, {"rank": 47, "name": "알티옥트산", "actual": 29.6, "goal": 0.0}, {"rank": 48, "name": "베포타스틴", "actual": 29.5, "goal": 0.0}, {"rank": 49, "name": "시트디엠", "actual": 29.5, "goal": 0.0}, {"rank": 50, "name": "디푸란", "actual": 28.0, "goal": 0.0}, {"rank": 51, "name": "아리피코", "actual": 27.9, "goal": 0.0}, {"rank": 52, "name": "페노베이트", "actual": 25.5, "goal": 3.5}, {"rank": 53, "name": "리바코르", "actual": 23.3, "goal": 0.0}, {"rank": 54, "name": "엠플디엠", "actual": 22.4, "goal": 2.1}, {"rank": 55, "name": "비타미니아", "actual": 21.8, "goal": 0.0}, {"rank": 56, "name": "로수바스타틴", "actual": 21.3, "goal": 1.1}, {"rank": 57, "name": "판투스", "actual": 20.7, "goal": 0.0}, {"rank": 58, "name": "동화행심", "actual": 20.1, "goal": 0.0}, {"rank": 59, "name": "판토프라", "actual": 18.6, "goal": 0.0}, {"rank": 60, "name": "세파클러", "actual": 18.1, "goal": 0.0}, {"rank": 61, "name": "시렌탈", "actual": 17.7, "goal": 0.0}, {"rank": 62, "name": "록시마이신", "actual": 17.1, "goal": 0.0}, {"rank": 63, "name": "벨루티아이", "actual": 17.0, "goal": 0.0}, {"rank": 64, "name": "파목클", "actual": 16.0, "goal": 0.0}, {"rank": 65, "name": "클로비어", "actual": 15.5, "goal": 0.0}, {"rank": 66, "name": "타라마돌", "actual": 14.2, "goal": 0.0}, {"rank": 67, "name": "리세트론", "actual": 14.2, "goal": 0.8}, {"rank": 68, "name": "시그나틴", "actual": 13.6, "goal": 0.0}, {"rank": 69, "name": "에트라빌", "actual": 12.5, "goal": 0.0}, {"rank": 70, "name": "아스몬", "actual": 11.6, "goal": 0.0}, {"rank": 71, "name": "오플록사신", "actual": 11.4, "goal": 0.4}, {"rank": 72, "name": "에날린", "actual": 11.0, "goal": 0.0}, {"rank": 73, "name": "에페로신", "actual": 8.0, "goal": 0.1}, {"rank": 74, "name": "알코타민", "actual": 6.7, "goal": 0.0}, {"rank": 75, "name": "시폭사신", "actual": 6.5, "goal": 0.0}, {"rank": 76, "name": "스테파론", "actual": 6.3, "goal": 0.0}, {"rank": 77, "name": "레니딥", "actual": 6.1, "goal": 0.0}, {"rank": 78, "name": "동화니세르골린", "actual": 5.0, "goal": 0.0}, {"rank": 79, "name": "메트포르민", "actual": 4.5, "goal": 0.0}, {"rank": 80, "name": "티파미드", "actual": 3.7, "goal": 0.0}, {"rank": 81, "name": "피오타존", "actual": 3.1, "goal": 0.0}, {"rank": 82, "name": "글리필", "actual": 2.0, "goal": 0.0}];
-let showAll=false;
+const allBrands = [
+  {rank:1,name:"란스톤엘에프디티",actual:1037.6,goal:1120.4},
+  {rank:2,name:"덱실란트",actual:849.9,goal:879.2},
+  {rank:3,name:"프리스틱",actual:514.9,goal:513.3},
+  {rank:4,name:"라코르",actual:469.4,goal:270.8},
+  {rank:5,name:"레메론",actual:394.1,goal:394.1},
+  {rank:6,name:"인트린직MD",actual:317.5,goal:368.4},
+  {rank:7,name:"맥페란",actual:277.8,goal:96},
+  {rank:8,name:"아토스타젯",actual:276.4,goal:288.1},
+  {rank:9,name:"라베듀엣",actual:207.3,goal:132.9},
+  {rank:10,name:"메녹틸",actual:201.7,goal:231.7},
+  {rank:11,name:"아토스타",actual:195.2,goal:207.8},
+  {rank:12,name:"클로피",actual:182.8,goal:223.2},
+  {rank:13,name:"테디엠",actual:175,goal:177.4},
+  {rank:14,name:"록소닌",actual:163.9,goal:166.2},
+  {rank:15,name:"클자핀",actual:143.6,goal:157.6},
+  {rank:16,name:"엠코발",actual:133.4,goal:134},
+  {rank:17,name:"엘텐",actual:114.3,goal:83},
+  {rank:18,name:"에탈로프",actual:94.1,goal:122},
+  {rank:19,name:"올자핀",actual:91.4,goal:50.8},
+  {rank:20,name:"다플디엠",actual:80.1,goal:88.8},
+  {rank:21,name:"다시디엠",actual:72.7,goal:75.8},
+  {rank:22,name:"실마진",actual:72.5,goal:66.4},
+  {rank:23,name:"에크락겔",actual:72.3,goal:230.8},
+  {rank:24,name:"레조트론",actual:72.3,goal:27.3},
+  {rank:25,name:"돈페질",actual:66.3,goal:71.5},
+  {rank:26,name:"파목신",actual:60.7,goal:50.8},
+  {rank:27,name:"메만틴",actual:56,goal:41.9},
+  {rank:28,name:"칼시베타",actual:55.7,goal:40.5},
+  {rank:29,name:"동화쿠에티아핀",actual:54.6,goal:60.8},
+  {rank:30,name:"로티브",actual:53.5,goal:54},
+  {rank:31,name:"레바핀",actual:52.9,goal:30.4},
+  {rank:32,name:"디트로판",actual:48.6,goal:52.7},
+  {rank:33,name:"암로디핀베실산염",actual:48.3,goal:50.4},
+  {rank:34,name:"팔렉신",actual:47.6,goal:34.9},
+  {rank:35,name:"모사피드",actual:46.7,goal:35.8},
+  {rank:36,name:"미보",actual:46.2,goal:56},
+  {rank:37,name:"오로파트",actual:45.3,goal:40},
+  {rank:38,name:"파인디핀",actual:44.5,goal:52.4},
+  {rank:39,name:"알피움",actual:44.1,goal:56},
+  {rank:40,name:"화장품",actual:41.1,goal:64.8},
+  {rank:41,name:"스타넵틴",actual:38.6,goal:44.7},
+  {rank:42,name:"암브렉트",actual:37,goal:29.3},
+  {rank:43,name:"헤어페시아",actual:35.5,goal:48.1},
+  {rank:44,name:"리나디엠",actual:33.2,goal:33},
+  {rank:45,name:"설포피린",actual:31.1,goal:23.4},
+  {rank:46,name:"알티옥트산",actual:29.5,goal:22},
+  {rank:47,name:"베포타스틴",actual:29.4,goal:30.2},
+  {rank:48,name:"시트디엠",actual:28.5,goal:39.3},
+  {rank:49,name:"아리피코",actual:27.8,goal:32.2},
+  {rank:50,name:"디푸란",actual:26.1,goal:26.9},
+  {rank:51,name:"페노베이트",actual:25.3,goal:29.1},
+  {rank:52,name:"리바코르",actual:22.9,goal:21.9},
+  {rank:53,name:"엠플디엠",actual:22.4,goal:45.8},
+  {rank:54,name:"비타미니아",actual:21.3,goal:31.2},
+  {rank:55,name:"로수바스타틴",actual:21.1,goal:23.9},
+  {rank:56,name:"판투스",actual:20.5,goal:11.6},
+  {rank:57,name:"동화행심",actual:20.1,goal:25.9},
+  {rank:58,name:"판토프라",actual:18.3,goal:20.8},
+  {rank:59,name:"세파클러",actual:17.8,goal:0},
+  {rank:60,name:"시렌탈",actual:17.6,goal:21.2},
+  {rank:61,name:"벨루티아이",actual:17,goal:0},
+  {rank:62,name:"록시마이신",actual:16.3,goal:17.1},
+  {rank:63,name:"파목클",actual:15.7,goal:12.8},
+  {rank:64,name:"클로비어",actual:15.2,goal:11.6},
+  {rank:65,name:"리세트론",actual:14.1,goal:18.9},
+  {rank:66,name:"타라마돌",actual:13.9,goal:13.2},
+  {rank:67,name:"아스몬",actual:11.4,goal:7.2},
+  {rank:68,name:"오플록사신",actual:11.2,goal:8.5},
+  {rank:69,name:"시그나틴",actual:11.2,goal:14.5},
+  {rank:70,name:"에날린",actual:10.9,goal:24.2},
+  {rank:71,name:"에트라빌",actual:10.1,goal:30.1},
+  {rank:72,name:"에페로신",actual:7.8,goal:14.1},
+  {rank:73,name:"알코타민",actual:6.6,goal:9.6},
+  {rank:74,name:"스테파론",actual:6.3,goal:5.8},
+  {rank:75,name:"시폭사신",actual:6.2,goal:7.8},
+  {rank:76,name:"레니딥",actual:6.1,goal:6.5},
+  {rank:77,name:"동화니세르골린",actual:4.8,goal:5.8},
+  {rank:78,name:"메트포르민",actual:4.4,goal:4.2},
+  {rank:79,name:"티파미드",actual:3.6,goal:3.7},
+  {rank:80,name:"피오타존",actual:3.1,goal:6},
+  {rank:81,name:"글리필",actual:1.9,goal:2.7}
+];
+let showAll = false;
+function fmt(n){return n.toLocaleString('ko-KR');}
 function renderBrands(){
-  const list=showAll?allBrands:allBrands.slice(0,20);
-  document.getElementById('brandBody').innerHTML=list.map(b=>{
-    const hasGoal=b.goal>0;
-    const pctVal=hasGoal?(b.actual/b.goal*100):null;
-    const barW=hasGoal?Math.min(pctVal,100).toFixed(1):100;
-    const over=hasGoal&&pctVal>=100;
-    const barColor=over?'#16a34a':'var(--red)';
-    const pctStr=hasGoal?pctVal.toFixed(1)+'%':'-';
-    const pctClass=over?'pct-over':'pct-under';
-    const goalStr=hasGoal?b.goal.toLocaleString()+'백만':'-';
+  const list = showAll ? allBrands : allBrands.slice(0,20);
+  document.getElementById('brandBody').innerHTML = list.map(b=>{
+    const hasGoal = b.goal > 0;
+    const pctVal = hasGoal ? (b.actual/b.goal*100) : null;
+    const barW = hasGoal ? Math.min(pctVal,100).toFixed(1) : 100;
+    const over = hasGoal && pctVal >= 100;
+    const barColor = over ? '#16a34a' : 'var(--red)';
+    const pctStr = hasGoal ? pctVal.toFixed(1)+'%' : '-';
+    const pctClass = over ? 'pct-over' : 'pct-under';
+    const goalStr = hasGoal ? b.goal.toLocaleString() + '백만' : '-';
     return `<tr>
       <td><span class="rank-badge ${b.rank<=5?'top':''}">${b.rank}</span></td>
       <td><span class="brand-name">${b.name}</span></td>
@@ -374,8 +476,8 @@ function renderBrands(){
   }).join('');
 }
 function toggleBrands(){
-  showAll=!showAll;renderBrands();
-  document.getElementById('showMoreBtn').textContent=showAll?'▲ 접기':'▼ 전체 브랜드 보기 (82개)';
+  showAll=!showAll; renderBrands();
+  document.getElementById('showMoreBtn').textContent=showAll?'▲ 접기':'▼ 전체 브랜드 보기 (81개)';
 }
 renderBrands();
 </script>
