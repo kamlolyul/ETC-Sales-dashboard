@@ -778,21 +778,27 @@ function renderFocusDetailTrend() {
 }
 
 function renderFocusDetailTop5() {
-  const items = focusCustTrend[focusDetailSelected] || [];
+  const raw = focusCustTrend[focusDetailSelected] || {};
   const tbody = document.querySelector('#focusDetailTop5Table tbody');
+
+  // 새 구조: {거래처명: {months:{}, months_qty:{}}}
+  const items = Object.entries(raw).map(([name, data]) => ({ name, ...data }))
+    .sort((a,b) => (b.months?.[LAST_MONTH]||0) - (a.months?.[LAST_MONTH]||0))
+    .slice(0, 5);
+
   if (!items.length) {
-    tbody.innerHTML = '<tr><td colspan="2" style="color:var(--text-light);">데이터 없음</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text-light);">데이터 없음</td></tr>';
     return;
   }
-  // build header with month columns dynamically
+
   const thead = document.querySelector('#focusDetailTop5Table thead tr');
   const monthCols = monthlyData.map(d => `<th class="num">${fmtMonth(d.month)}</th>`).join('');
   thead.innerHTML = `<th>거래처명</th>${monthCols}<th class="num">합계</th>`;
 
   tbody.innerHTML = items.map(it => {
     const cols = monthlyData.map(d => `<td class="num">${fmt(pickMonthVal(it, d.month))}</td>`).join('');
-    const totalVal = metricMode === 'value' ? it.total : it.total_qty;
-    return `<tr><td>${it.name}</td>${cols}<td class="num" style="font-weight:600;">${fmt(totalVal)}</td></tr>`;
+    const total = monthlyData.reduce((s,d) => s + pickMonthVal(it, d.month), 0);
+    return `<tr><td>${it.name}</td>${cols}<td class="num" style="font-weight:600;">${fmt(total)}</td></tr>`;
   }).join('');
 }
 
