@@ -1451,8 +1451,16 @@ function buildGugunOptions() {
   const guguns = [...new Set(
     getUncData().filter(r => !sidoVal || r.sido === sidoVal).map(r => r.gugun)
   )].sort((a,b) => a.localeCompare(b, 'ko'));
-  gugunSel.innerHTML = '<option value="">구군 전체</option>' +
+
+  // 시도 선택 시 "서울 전체 / 경기 전체", 미선택 시 "구군 전체"
+  const allLabel = sidoVal === '서울특별시' ? '서울 전체' :
+                   sidoVal === '경기도'    ? '경기 전체' : '구군 전체';
+  gugunSel.innerHTML = `<option value="">${allLabel}</option>` +
     guguns.map(g => `<option value="${g}"${g===current?' selected':''}>${g}</option>`).join('');
+
+  // 시도 바뀌면 구군 선택 초기화
+  if (!guguns.includes(current)) gugunSel.value = '';
+
   renderUnconnectedTable();
 }
 
@@ -1462,7 +1470,6 @@ function renderUnconnectedTable() {
   const sidoVal   = document.getElementById('uncSido')?.value   || '';
   const gugunVal  = document.getElementById('uncGugun')?.value  || '';
   const typeVal   = document.getElementById('uncType')?.value   || '';
-  const month     = document.getElementById('uncMonth')?.value  || '2026-05';
 
   const grandTotal = data.length;
   const grandAmt   = data.reduce((s,r) => s+r.amount, 0);
@@ -1487,8 +1494,11 @@ function renderUnconnectedTable() {
   const isFiltered = sidoVal || gugunVal || typeVal || searchVal;
   if (isFiltered) {
     const filteredAmt = filtered.reduce((s,r) => s+r.amount, 0);
+    // 지역 표시: 구군 선택 시 구군명, 시도만 선택 시 "서울 전체" 등
+    const regionLabel = gugunVal ? `📍 ${gugunVal}` :
+                        sidoVal  ? `📍 ${sidoVal === '서울특별시' ? '서울 전체' : '경기 전체'}` : '';
     summaryBar.style.display = 'block';
-    summaryBar.innerHTML = `필터 결과 <strong>${filtered.length.toLocaleString()}개소</strong>&nbsp;&nbsp;|&nbsp;&nbsp;매출 합계 <strong>${fmt(filteredAmt)}원</strong>${gugunVal ? `&nbsp;&nbsp;|&nbsp;&nbsp;<span style="color:var(--focus);">📍 ${gugunVal} 지역</span>` : ''}`;
+    summaryBar.innerHTML = `필터 결과 <strong>${filtered.length.toLocaleString()}개소</strong>&nbsp;&nbsp;|&nbsp;&nbsp;매출 합계 <strong>${fmt(filteredAmt)}원</strong>${regionLabel ? `&nbsp;&nbsp;|&nbsp;&nbsp;<span style="color:var(--focus);">${regionLabel}</span>` : ''}`;
   } else {
     summaryBar.style.display = 'none';
   }
