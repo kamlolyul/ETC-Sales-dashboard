@@ -599,6 +599,7 @@
       <!-- 필터 영역 -->
       <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:12px;">
         <select id="uncMonth" style="padding:8px 14px; border:1px solid var(--border); border-radius:8px; font-size:0.85rem; font-weight:700; color:var(--primary); background:#eef6ff;">
+          <option value="2026-06">2026년 6월</option>
           <option value="2026-05">2026년 5월</option>
           <option value="2026-04">2026년 4월</option>
         </select>
@@ -1439,7 +1440,7 @@ function selectMember(member) {
 
 // ============ UNCONNECTED TABLE ============
 function getUncData() {
-  const month = document.getElementById('uncMonth')?.value || '2026-05';
+  const month = document.getElementById('uncMonth')?.value || '2026-06';
   return unconnectedData[month] || [];
 }
 
