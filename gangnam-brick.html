@@ -406,7 +406,7 @@
     margin-bottom:4px;
   }
   .comp-row-grid{
-    grid-template-columns:1.4fr 100px 100px 100px 84px !important;
+    grid-template-columns:1.3fr 96px 96px 96px 108px 76px !important;
   }
   .comp-delta{
     font-family:'IBM Plex Mono',monospace;
@@ -492,7 +492,7 @@
       <div class="comp-sub" id="compProductMeta"></div>
       <div class="chart-box" style="height:340px"><canvas id="compBarChart"></canvas></div>
       <div class="prod-table" style="margin-top:14px;">
-        <div class="prod-row head comp-row-grid"><div>Brick (동)</div><div style="text-align:right">이전 6개월</div><div style="text-align:right">최근 6개월</div><div style="text-align:right">MAT 합계</div><div style="text-align:right">증감</div></div>
+        <div class="prod-row head comp-row-grid"><div>Brick (동)</div><div style="text-align:right">이전 6개월</div><div style="text-align:right">최근 6개월</div><div style="text-align:right">MAT 합계</div><div style="text-align:right">증감액</div><div style="text-align:right">증감%</div></div>
         <div id="compBrickList" class="prod-list" style="max-height:520px;"></div>
       </div>
     </div>
@@ -882,8 +882,9 @@ function renderCompAnalysis(){
     const first6 = sum(arr.slice(0,6));
     const last6 = sum(arr.slice(6,12));
     const mat = first6 + last6;
+    const delta = last6 - first6;
     const growth = first6 !== 0 ? ((last6-first6)/Math.abs(first6)*100) : (last6>0 ? 100 : (last6<0 ? -100 : 0));
-    return {code, name: b.name_k || b.name_e, first6, last6, mat, growth, hasData: !!match};
+    return {code, name: b.name_k || b.name_e, first6, last6, mat, delta, growth, hasData: !!match};
   }).filter(r=>r.mat !== 0 || r.hasData);
 
   rows.sort((a,b)=>b.growth - a.growth);
@@ -929,6 +930,8 @@ function renderCompAnalysis(){
   rows.forEach(r=>{
     const cls = r.growth > 1 ? 'up' : (r.growth < -1 ? 'down' : 'flat');
     const sign = r.growth >= 0 ? '+' : '';
+    const deltaSign = r.delta >= 0 ? '+' : '-';
+    const deltaLabel = deltaSign + fmtCell(Math.abs(r.delta));
     const row = document.createElement('div');
     row.className = 'prod-row comp-row-grid';
     row.innerHTML = `
@@ -936,6 +939,7 @@ function renderCompAnalysis(){
       <div class="p-value">${fmtCell(r.first6)}</div>
       <div class="p-value">${fmtCell(r.last6)}</div>
       <div class="p-value">${fmtCell(r.mat)}</div>
+      <div class="comp-delta ${cls}">${deltaLabel}</div>
       <div class="comp-delta ${cls}">${sign}${r.growth.toFixed(1)}%</div>
     `;
     listWrap.appendChild(row);
