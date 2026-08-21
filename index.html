@@ -1107,8 +1107,9 @@ function renderFocusCustTable() {
 
 // ============ CUSTOMER TREND TABLE ============
 let MONTH_KEYS = monthlyData.map(d => d.month); // e.g. ["2026-04","2026-05"]
-let LAST_MONTH = MONTH_KEYS[MONTH_KEYS.length-1];
-let PREV_MONTH = MONTH_KEYS[MONTH_KEYS.length-2];
+// 7월은 배승현 수원 자료만 있어 기본 표시월을 6월로 고정
+let LAST_MONTH = MONTH_KEYS.includes('2026-06') ? '2026-06' : MONTH_KEYS[MONTH_KEYS.length-1];
+let PREV_MONTH = MONTH_KEYS.includes('2026-05') ? '2026-05' : MONTH_KEYS[MONTH_KEYS.length-2];
 
 function renderCustTrendTable() {
   // 단일월 데이터(추이 없음)이거나 customerTrend가 비어있으면 스킵
