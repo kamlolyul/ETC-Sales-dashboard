@@ -794,7 +794,10 @@ function setMetricMode(mode) {
 document.getElementById('btnValue').addEventListener('click', () => setMetricMode('value'));
 document.getElementById('btnUnit').addEventListener('click', () => setMetricMode('unit'));
 
-let currentIdx = monthlyData.length - 1;
+let currentIdx = (() => {
+  const idx6 = monthlyData.findIndex(d => d.month === '2026-06');
+  return idx6 >= 0 ? idx6 : monthlyData.length - 1;
+})();
 let focusGugunChart, focusBarChart, gugunBarChart, gugunPieChart, focusTrendChart, focusGugunSelected = FOCUS_PRODUCTS[0], focusCustSelected = FOCUS_PRODUCTS[0];
 
 // ============ INIT MONTH PICKER ============
@@ -807,6 +810,9 @@ monthlyData.forEach((d, i) => {
 });
 monthPicker.value = currentIdx;
 syncMobileMonthPicker();
+// 초기 LAST_MONTH/PREV_MONTH를 currentIdx 기준으로 동기화
+LAST_MONTH = MONTH_KEYS[currentIdx];
+PREV_MONTH = currentIdx > 0 ? MONTH_KEYS[currentIdx - 1] : MONTH_KEYS[0];
 monthPicker.addEventListener('change', e => {
   currentIdx = parseInt(e.target.value);
   // 선택된 월에 따라 LAST_MONTH/PREV_MONTH 동적 업데이트
@@ -1111,8 +1117,9 @@ function renderFocusCustTable() {
 // ============ CUSTOMER TREND TABLE ============
 let MONTH_KEYS = monthlyData.map(d => d.month); // e.g. ["2026-04","2026-05"]
 // 7월은 배승현 수원 자료만 있어 기본 표시월을 6월로 고정
-let LAST_MONTH = MONTH_KEYS.includes('2026-06') ? '2026-06' : MONTH_KEYS[MONTH_KEYS.length-1];
-let PREV_MONTH = MONTH_KEYS.includes('2026-05') ? '2026-05' : MONTH_KEYS[MONTH_KEYS.length-2];
+// LAST_MONTH/PREV_MONTH는 monthPicker 초기화 후 currentIdx 기준으로 재설정됨 (아래 참조)
+let LAST_MONTH = MONTH_KEYS[MONTH_KEYS.length-1];
+let PREV_MONTH = MONTH_KEYS.length > 1 ? MONTH_KEYS[MONTH_KEYS.length-2] : MONTH_KEYS[0];
 
 function renderCustTrendTable() {
   // 단일월 데이터(추이 없음)이거나 customerTrend가 비어있으면 스킵
