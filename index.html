@@ -809,6 +809,9 @@ monthPicker.value = currentIdx;
 syncMobileMonthPicker();
 monthPicker.addEventListener('change', e => {
   currentIdx = parseInt(e.target.value);
+  // 선택된 월에 따라 LAST_MONTH/PREV_MONTH 동적 업데이트
+  LAST_MONTH = MONTH_KEYS[currentIdx];
+  PREV_MONTH = currentIdx > 0 ? MONTH_KEYS[currentIdx - 1] : MONTH_KEYS[0];
   if (currentMember !== 'unconnected') renderAll();
 });
 
@@ -1410,8 +1413,10 @@ function selectMember(member) {
 
   // Recalculate month keys
   MONTH_KEYS = monthlyData.map(d => d.month);
-  LAST_MONTH = MONTH_KEYS[MONTH_KEYS.length-1];
-  PREV_MONTH = MONTH_KEYS[MONTH_KEYS.length-2];
+  // 기본 표시월: 6월 고정 (7월은 배승현 수원 자료만 있어 별도 조회용)
+  const defaultIdx = MONTH_KEYS.includes('2026-06') ? MONTH_KEYS.indexOf('2026-06') : MONTH_KEYS.length - 1;
+  LAST_MONTH = MONTH_KEYS[defaultIdx];
+  PREV_MONTH = defaultIdx > 0 ? MONTH_KEYS[defaultIdx - 1] : MONTH_KEYS[0];
 
   // Update title
   document.getElementById('dashTitle').textContent = member + ' 담당 매출 대시보드';
@@ -1425,7 +1430,7 @@ function selectMember(member) {
     opt.textContent = fmtMonth(d.month);
     picker.appendChild(opt);
   });
-  currentIdx = monthlyData.length - 1;
+  currentIdx = defaultIdx;
   picker.value = currentIdx;
   syncMobileMonthPicker();
   // 모든 팀원 2개월 데이터 보유 - 추이 카드 항상 표시
