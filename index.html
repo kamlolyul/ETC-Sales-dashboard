@@ -683,12 +683,12 @@ const unconnectedData = {"2026-04": [], "2026-05": [], "2026-06": [], "2026-07":
 // unconnectedData loaded from data.js // {month: [...]}
 
 // Current member - default 배승현
-let currentMember = '배승현';
-let monthlyData    = ALL_MEMBER_DATA['배승현'].monthlyData;
-let customerTrend  = ALL_MEMBER_DATA['배승현'].customerTrend;
-let hospitalTrend  = ALL_MEMBER_DATA['배승현'].hospitalTrend;
-let focusCustTrend = ALL_MEMBER_DATA['배승현'].focusCustTrend;
-let hospitalProducts = ALL_MEMBER_DATA['배승현'].hospitalProducts;
+var currentMember = '배승현';
+var monthlyData    = ALL_MEMBER_DATA['배승현'].monthlyData;
+var customerTrend  = ALL_MEMBER_DATA['배승현'].customerTrend;
+var hospitalTrend  = ALL_MEMBER_DATA['배승현'].hospitalTrend;
+var focusCustTrend = ALL_MEMBER_DATA['배승현'].focusCustTrend;
+var hospitalProducts = ALL_MEMBER_DATA['배승현'].hospitalProducts;
 
 const FOCUS_PRODUCTS = ["ALS-LX","CSD-S","EYB UD","TPC UD","IKR"];
 const NEW_PRODUCTS = ["RHO"];
@@ -718,7 +718,7 @@ const fmtMonth = m => {
 };
 
 // ============ METRIC MODE (Value / Unit) ============
-let metricMode = 'value'; // 'value' or 'unit'
+var metricMode = 'value'; // 'value' or 'unit'
 const unitLabel = () => metricMode === 'value' ? '원' : '개';
 const unitShort = () => metricMode === 'value' ? 'M' : '개';
 // Pick amount or qty from an object with {amount, qty}
@@ -817,11 +817,11 @@ function setMetricMode(mode) {
 document.getElementById('btnValue').addEventListener('click', () => setMetricMode('value'));
 document.getElementById('btnUnit').addEventListener('click', () => setMetricMode('unit'));
 
-let currentIdx = (() => {
+var currentIdx = (() => {
   const idx6 = monthlyData.findIndex(d => d.month === '2026-06');
   return idx6 >= 0 ? idx6 : monthlyData.length - 1;
 })();
-let focusGugunChart, focusBarChart, gugunBarChart, gugunPieChart, focusTrendChart, focusGugunSelected = FOCUS_PRODUCTS[0], focusCustSelected = FOCUS_PRODUCTS[0];
+var focusGugunChart, focusBarChart, gugunBarChart, gugunPieChart, focusTrendChart, focusGugunSelected = FOCUS_PRODUCTS[0], focusCustSelected = FOCUS_PRODUCTS[0];
 
 // ============ INIT MONTH PICKER ============
 const monthPicker = document.getElementById('monthPicker');
@@ -1138,7 +1138,7 @@ function renderFocusCustTable() {
 }
 
 // ============ CUSTOMER TREND TABLE ============
-let MONTH_KEYS = monthlyData.map(d => d.month); // e.g. ["2026-04","2026-05"]
+var MONTH_KEYS = monthlyData.map(d => d.month); // e.g. ["2026-04","2026-05"]
 // 7월은 배승현 수원 자료만 있어 기본 표시월을 6월로 고정
 // LAST_MONTH/PREV_MONTH는 monthPicker 초기화 후 currentIdx 기준으로 재설정됨 (아래 참조)
 var LAST_MONTH = MONTH_KEYS[MONTH_KEYS.length-1];
