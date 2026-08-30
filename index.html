@@ -682,13 +682,22 @@ const unconnectedData = {"2026-04": [], "2026-05": [], "2026-06": [], "2026-07":
 // ALL_MEMBER_DATA loaded from data.js
 // unconnectedData loaded from data.js // {month: [...]}
 
+// ============ GLOBAL VAR PRE-DECLARATION ============
+var gugunBarChart, gugunPieChart, focusTrendChart, focusBarChart;
+var focusGugunChart, focusGugunSelected, focusCustSelected;
+var focusDetailTrendChart, focusDetailSelected;
+var hospitalBarChart, hospitalFocusChart;
+monthlyData, customerTrend, hospitalTrend, focusCustTrend, hospitalProducts;
+currentMember, currentIdx, metricMode;
+var MONTH_KEYS, LAST_MONTH, PREV_MONTH;
+
 // Current member - default 배승현
 var currentMember = '배승현';
 var monthlyData    = ALL_MEMBER_DATA['배승현'].monthlyData;
-var customerTrend  = ALL_MEMBER_DATA['배승현'].customerTrend;
-var hospitalTrend  = ALL_MEMBER_DATA['배승현'].hospitalTrend;
-var focusCustTrend = ALL_MEMBER_DATA['배승현'].focusCustTrend;
-var hospitalProducts = ALL_MEMBER_DATA['배승현'].hospitalProducts;
+customerTrend  = ALL_MEMBER_DATA['배승현'].customerTrend;
+hospitalTrend  = ALL_MEMBER_DATA['배승현'].hospitalTrend;
+focusCustTrend = ALL_MEMBER_DATA['배승현'].focusCustTrend;
+hospitalProducts = ALL_MEMBER_DATA['배승현'].hospitalProducts;
 
 var FOCUS_PRODUCTS = ["ALS-LX","CSD-S","EYB UD","TPC UD","IKR"];
 var NEW_PRODUCTS = ["RHO"];
@@ -718,7 +727,7 @@ var fmtMonth = m => {
 };
 
 // ============ METRIC MODE (Value / Unit) ============
-var metricMode = 'value'; // 'value' or 'unit'
+metricMode = 'value'; // 'value' or 'unit'
 var unitLabel = () => metricMode === 'value' ? '원' : '개';
 var unitShort = () => metricMode === 'value' ? 'M' : '개';
 // Pick amount or qty from an object with {amount, qty}
@@ -817,11 +826,11 @@ function setMetricMode(mode) {
 document.getElementById('btnValue').addEventListener('click', () => setMetricMode('value'));
 document.getElementById('btnUnit').addEventListener('click', () => setMetricMode('unit'));
 
-var currentIdx = (() => {
+currentIdx = (() => {
   const idx6 = monthlyData.findIndex(d => d.month === '2026-06');
   return idx6 >= 0 ? idx6 : monthlyData.length - 1;
 })();
-var focusGugunChart, focusBarChart, gugunBarChart, gugunPieChart, focusTrendChart, focusGugunSelected = FOCUS_PRODUCTS[0], focusCustSelected = FOCUS_PRODUCTS[0];
+focusGugunSelected = FOCUS_PRODUCTS[0]; focusCustSelected = FOCUS_PRODUCTS[0];
 
 // ============ INIT MONTH PICKER ============
 var monthPicker = document.getElementById('monthPicker');
@@ -958,8 +967,7 @@ function renderFocusBar() {
 }
 
 // ============ FOCUS DETAIL (per product trend + top5 customers) ============
-var focusDetailSelected = FOCUS_PRODUCTS[0];
-var focusDetailTrendChart;
+focusDetailSelected = FOCUS_PRODUCTS[0];
 
 function renderFocusDetailTabs() {
   const tabsDiv = document.getElementById('focusDetailTabs');
@@ -1138,11 +1146,11 @@ function renderFocusCustTable() {
 }
 
 // ============ CUSTOMER TREND TABLE ============
-var MONTH_KEYS = monthlyData.map(d => d.month); // e.g. ["2026-04","2026-05"]
+MONTH_KEYS = monthlyData.map(d => d.month); // e.g. ["2026-04","2026-05"]
 // 7월은 배승현 수원 자료만 있어 기본 표시월을 6월로 고정
 // LAST_MONTH/PREV_MONTH는 monthPicker 초기화 후 currentIdx 기준으로 재설정됨 (아래 참조)
-var LAST_MONTH = MONTH_KEYS[MONTH_KEYS.length-1];
-var PREV_MONTH = MONTH_KEYS.length > 1 ? MONTH_KEYS[MONTH_KEYS.length-2] : MONTH_KEYS[0];
+LAST_MONTH = MONTH_KEYS[MONTH_KEYS.length-1];
+PREV_MONTH = MONTH_KEYS.length > 1 ? MONTH_KEYS[MONTH_KEYS.length-2] : MONTH_KEYS[0];
 
 function renderCustTrendTable() {
   // 단일월 데이터(추이 없음)이거나 customerTrend가 비어있으면 스킵
@@ -1222,7 +1230,7 @@ document.getElementById('custGugunFilter').addEventListener('change', renderCust
 
 // ============ HOSPITAL TREND ============
 var hospitalSelected = hospitalTrend.length ? hospitalTrend[0].hospital : null;
-var hospitalBarChart, hospitalFocusChart;
+// hospitalBarChart moved to top
 
 function renderHospitalTrend() {
   if (!hospitalTrend.length) return;
