@@ -690,9 +690,9 @@ var hospitalTrend  = ALL_MEMBER_DATA['배승현'].hospitalTrend;
 var focusCustTrend = ALL_MEMBER_DATA['배승현'].focusCustTrend;
 var hospitalProducts = ALL_MEMBER_DATA['배승현'].hospitalProducts;
 
-const FOCUS_PRODUCTS = ["ALS-LX","CSD-S","EYB UD","TPC UD","IKR"];
-const NEW_PRODUCTS = ["RHO"];
-const FOCUS_NAMES = {
+var FOCUS_PRODUCTS = ["ALS-LX","CSD-S","EYB UD","TPC UD","IKR"];
+var NEW_PRODUCTS = ["RHO"];
+var FOCUS_NAMES = {
   "ALS-LX": "알레지온LX(에피나스틴)",
   "CSD-S": "코솝-에스(1회용)",
   "EYB UD": "에이베리스UD(오미데네팍)",
@@ -700,7 +700,7 @@ const FOCUS_NAMES = {
   "IKR": "아이커비스(시클로스포린)",
   "RHO": "로프레사(네타르수딜)"
 };
-const PRODUCT_COLORS = {
+var PRODUCT_COLORS = {
   "ALS-LX": "#e76f51",
   "CSD-S": "#2e86ab",
   "EYB UD": "#f4a261",
@@ -708,10 +708,10 @@ const PRODUCT_COLORS = {
   "IKR": "#06d6a0",
   "RHO": "#2a9d8f"
 };
-const GUGUN_COLORS = ["#1e3a5f","#2e86ab","#e76f51","#8d99ae"];
+var GUGUN_COLORS = ["#1e3a5f","#2e86ab","#e76f51","#8d99ae"];
 
-const fmt = n => Math.round(n).toLocaleString('ko-KR');
-const fmtMonth = m => {
+var fmt = n => Math.round(n).toLocaleString('ko-KR');
+var fmtMonth = m => {
   if (!m) return '-';
   const [y, mo] = m.split('-');
   return `${y}년 ${parseInt(mo)}월`;
@@ -719,23 +719,23 @@ const fmtMonth = m => {
 
 // ============ METRIC MODE (Value / Unit) ============
 var metricMode = 'value'; // 'value' or 'unit'
-const unitLabel = () => metricMode === 'value' ? '원' : '개';
-const unitShort = () => metricMode === 'value' ? 'M' : '개';
+var unitLabel = () => metricMode === 'value' ? '원' : '개';
+var unitShort = () => metricMode === 'value' ? 'M' : '개';
 // Pick amount or qty from an object with {amount, qty}
-const pick = obj => {
+var pick = obj => {
   if (!obj) return 0;
   return metricMode === 'value' ? (obj.amount ?? 0) : (obj.qty ?? 0);
 };
 // For monthly_data by_pcode / by_gugun etc that store separate qty maps
-const pickGugun = (d, g) => metricMode === 'value' ? (d.by_gugun[g] || 0) : (d.by_gugun_qty[g] || 0);
-const pickTotal = d => metricMode === 'value' ? d.total : d.total_qty;
-const pickFocusGugun = (d, pc, g) => {
+var pickGugun = (d, g) => metricMode === 'value' ? (d.by_gugun[g] || 0) : (d.by_gugun_qty[g] || 0);
+var pickTotal = d => metricMode === 'value' ? d.total : d.total_qty;
+var pickFocusGugun = (d, pc, g) => {
   const v = d.focus_by_gugun[pc]?.[g];
   if (!v) return 0;
   return metricMode === 'value' ? v.amount : v.qty;
 };
-const pickCustomer = c => metricMode === 'value' ? c.amount : c.qty;
-const pickMonthVal = (obj, monthKey) => {
+var pickCustomer = c => metricMode === 'value' ? c.amount : c.qty;
+var pickMonthVal = (obj, monthKey) => {
   if (!obj) return 0;
   // 새 구조: {months:{...}, months_qty:{...}}
   if (obj.months !== undefined) {
@@ -744,8 +744,8 @@ const pickMonthVal = (obj, monthKey) => {
   // 구 구조: {monthKey: amount, monthKey_qty: qty}
   return metricMode === 'value' ? (obj[monthKey] || 0) : (obj[monthKey + '_qty'] || 0);
 };
-const chartTick = v => metricMode === 'value' ? (v/1e6).toFixed(1)+'M' : Math.round(v).toLocaleString('ko-KR');
-const fmtVal = n => metricMode === 'value' ? (fmt(n) + ' 원') : (fmt(n) + ' 개');
+var chartTick = v => metricMode === 'value' ? (v/1e6).toFixed(1)+'M' : Math.round(v).toLocaleString('ko-KR');
+var fmtVal = n => metricMode === 'value' ? (fmt(n) + ' 원') : (fmt(n) + ' 개');
 
 // ============ MOBILE HELPERS ============
 function toggleDrawer() {
@@ -783,7 +783,7 @@ function syncMobileMetric(mode) {
 }
 
 // Mobile month picker (mirrors desktop monthPicker)
-const monthPickerM = document.getElementById('monthPickerM');
+var monthPickerM = document.getElementById('monthPickerM');
 if (monthPickerM) {
   monthPickerM.addEventListener('change', e => {
     currentIdx = parseInt(e.target.value);
@@ -824,7 +824,7 @@ var currentIdx = (() => {
 var focusGugunChart, focusBarChart, gugunBarChart, gugunPieChart, focusTrendChart, focusGugunSelected = FOCUS_PRODUCTS[0], focusCustSelected = FOCUS_PRODUCTS[0];
 
 // ============ INIT MONTH PICKER ============
-const monthPicker = document.getElementById('monthPicker');
+var monthPicker = document.getElementById('monthPicker');
 monthlyData.forEach((d, i) => {
   const opt = document.createElement('option');
   opt.value = i;
@@ -834,8 +834,8 @@ monthlyData.forEach((d, i) => {
 monthPicker.value = currentIdx;
 syncMobileMonthPicker();
 // 초기 LAST_MONTH/PREV_MONTH를 currentIdx 기준으로 동기화
-LAST_MONTH = MONTH_KEYS[currentIdx];
-PREV_MONTH = currentIdx > 0 ? MONTH_KEYS[currentIdx - 1] : MONTH_KEYS[0];
+LAST_MONTH = MONTH_KEYS[Math.min(currentIdx, MONTH_KEYS.length-1)];
+PREV_MONTH = currentIdx > 0 ? MONTH_KEYS[Math.min(currentIdx-1, MONTH_KEYS.length-1)] : MONTH_KEYS[0];
 monthPicker.addEventListener('change', e => {
   currentIdx = parseInt(e.target.value);
   // 선택된 월에 따라 LAST_MONTH/PREV_MONTH 동적 업데이트
@@ -958,8 +958,8 @@ function renderFocusBar() {
 }
 
 // ============ FOCUS DETAIL (per product trend + top5 customers) ============
-let focusDetailSelected = FOCUS_PRODUCTS[0];
-let focusDetailTrendChart;
+var focusDetailSelected = FOCUS_PRODUCTS[0];
+var focusDetailTrendChart;
 
 function renderFocusDetailTabs() {
   const tabsDiv = document.getElementById('focusDetailTabs');
@@ -1221,8 +1221,8 @@ document.getElementById('custSort').addEventListener('change', renderCustTrendTa
 document.getElementById('custGugunFilter').addEventListener('change', renderCustTrendTable);
 
 // ============ HOSPITAL TREND ============
-let hospitalSelected = hospitalTrend.length ? hospitalTrend[0].hospital : null;
-let hospitalBarChart, hospitalFocusChart;
+var hospitalSelected = hospitalTrend.length ? hospitalTrend[0].hospital : null;
+var hospitalBarChart, hospitalFocusChart;
 
 function renderHospitalTrend() {
   if (!hospitalTrend.length) return;
